@@ -3,13 +3,13 @@ from datetime import datetime
 from datetime import timedelta
 
 
-db = sqlite3.connect('test.db')
+db = sqlite3.connect('PlexDatabase.db')
 cursor = db.cursor()
 cursor2 = db.cursor()
 pos = 0
 RecentReleasesMinimum = 3
 RecentReleasesLimit = 7
-timestamp = datetime.now().replace(microsecond=0)
+timestamp = datetime.now().replace(microsecond=0) + timedelta(days=+1)
 
 
 for row in cursor.execute("SELECT id,title,originally_available_at "  # senaste filmen
@@ -20,8 +20,9 @@ for row in cursor.execute("SELECT id,title,originally_available_at "  # senaste 
                           "LIMIT 1"):
 
     referenceDate = row[2]
-    date = datetime.strptime(referenceDate, '%Y-%m-%d %H:%M:%S')
-    date = date + timedelta(days=-14)
+
+date = datetime.strptime(referenceDate, '%Y-%m-%d %H:%M:%S')
+date = date + timedelta(days=-14)
 
 ########################################################################################################################
 
@@ -40,7 +41,6 @@ if RecentReleasesLimit > 0:
                         "SET added_at = ?"
                         "WHERE id = ?", (now.isoformat().replace('T', ' '), row[0],))
 
-
         pos = pos + 1
 db.commit()
 ########################################################################################################################
@@ -57,9 +57,8 @@ if RecentReleasesMinimum-pos > 0:
         now = timestamp + timedelta(seconds=10-pos)
 
         cursor2.execute("UPDATE metadata_items "
-                       "SET added_at = ?"
-                       "WHERE id = ?", (now.isoformat().replace('T', ' '), row[0],))
-
+                        "SET added_at = ?"
+                        "WHERE id = ?", (now.isoformat().replace('T', ' '), row[0],))
 
         pos = pos + 1
 
@@ -78,9 +77,8 @@ for row in cursor.execute("SELECT id,title "  # old but gold
     now = timestamp + timedelta(seconds=10-pos)
 
     cursor2.execute("UPDATE metadata_items "
-                   "SET added_at = ?"
-                   "WHERE id = ?", (now.isoformat().replace('T', ' '), row[0],))
-
+                    "SET added_at = ?"
+                    "WHERE id = ?", (now.isoformat().replace('T', ' '), row[0],))
 
     pos = pos + 1
 db.commit()
@@ -96,9 +94,8 @@ for row in cursor.execute("SELECT id,title "  # random no.1
     now = timestamp + timedelta(seconds=10-pos)
 
     cursor2.execute("UPDATE metadata_items "
-                   "SET added_at = ?"
-                   "WHERE id = ?", (now.isoformat().replace('T', ' '), row[0],))
-
+                    "SET added_at = ?"
+                    "WHERE id = ?", (now.isoformat().replace('T', ' '), row[0],))
 
     pos = pos + 1
 db.commit()
@@ -114,13 +111,11 @@ for row in cursor.execute("SELECT id,title "  # random no.2
     now = timestamp + timedelta(seconds=10-pos)
 
     cursor2.execute("UPDATE metadata_items "
-                   "SET added_at = ?"
-                   "WHERE id = ?", (now.isoformat().replace('T', ' '), row[0],))
-
+                    "SET added_at = ?"
+                    "WHERE id = ?", (now.isoformat().replace('T', ' '), row[0],))
 
     pos = pos + 1
 db.commit()
 ########################################################################################################################
-
 
 db.close()
