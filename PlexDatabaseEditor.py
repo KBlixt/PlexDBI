@@ -7,8 +7,8 @@ db = sqlite3.connect('test.db')
 cursor = db.cursor()
 cursor2 = db.cursor()
 pos = 0
-garanteratAntalSenasteFilmer = 3
-maxAntalSenasteFilmer = 7
+RecentReleasesMinimum = 3
+RecentReleasesLimit = 7
 timestamp = datetime.now().replace(microsecond=0)
 
 
@@ -25,14 +25,14 @@ for row in cursor.execute("SELECT id,title,originally_available_at "  # senaste 
 
 ########################################################################################################################
 
-if maxAntalSenasteFilmer > 0:
+if RecentReleasesLimit > 0:
     for row in cursor.execute("SELECT id,title,originally_available_at "  # 7 movies within 14 days
                               "FROM metadata_items "
                               "WHERE library_section_id = 1 "
                               "AND duration > 1 "
                               "AND originally_available_at > ? "
                               "ORDER BY originally_available_at DESC "
-                              "LIMIT ? ", (date.isoformat().replace('T', ' '), maxAntalSenasteFilmer)):
+                              "LIMIT ? ", (date.isoformat().replace('T', ' '), RecentReleasesLimit)):
 
         now = timestamp + timedelta(seconds=10-pos)
 
@@ -45,14 +45,14 @@ if maxAntalSenasteFilmer > 0:
 db.commit()
 ########################################################################################################################
 
-if garanteratAntalSenasteFilmer-pos > 0:
+if RecentReleasesMinimum-pos > 0:
     for row in cursor.execute("SELECT id,title,originally_available_at "  # at least the last 3 movies
                               "FROM metadata_items "
                               "WHERE library_section_id = 1 "
                               "AND duration > 1 "
                               "AND originally_available_at < ? "
                               "ORDER BY originally_available_at DESC "
-                              "LIMIT ?", (date.isoformat().replace('T', ' '), garanteratAntalSenasteFilmer - pos,)):
+                              "LIMIT ?", (date.isoformat().replace('T', ' '), RecentReleasesMinimum - pos,)):
 
         now = timestamp + timedelta(seconds=10-pos)
 
