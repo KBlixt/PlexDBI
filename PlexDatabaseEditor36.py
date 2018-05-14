@@ -5,6 +5,7 @@ from datetime import timedelta
 import json
 import urllib.request
 import configparser
+import string
 
 config = configparser.ConfigParser()
 config.read('PlexDatabaseEditor.config')
@@ -24,15 +25,15 @@ RecentReleasesLimit = 7
 timestamp = datetime.now().replace(microsecond=0) + timedelta(days=+1)
 referenceDate = ''
 
-for row in cursor.execute("SELECT id,title,originally_available_at,rating_count "  # most recent movie for reference
-                          "FROM metadata_items "
-                          "WHERE library_section_id = 1 "
-                          "AND metadata_type = 1 "
-                          "AND duration > 1 "
-                          "ORDER BY originally_available_at DESC "
-                          "LIMIT 1"):
-    print(row[3])
-    referenceDate = datetime.strptime(row[2], '%Y-%m-%d %H:%M:%S') + timedelta(days=-14)
+cursor.execute("SELECT id,title,originally_available_at,rating_count "  # most recent movie for reference
+                      "FROM metadata_items "
+                      "WHERE library_section_id = 1 "
+                      "AND metadata_type = 1 "
+                      "AND duration > 1 "
+                      "ORDER BY originally_available_at DESC "
+                      "LIMIT 1")
+rresponse = cursor.fetchone()
+referenceDate = datetime.strptime(rresponse[2], '%Y-%m-%d %H:%M:%S') + timedelta(days=-14)
 
 ########################################################################################################################
 
@@ -107,23 +108,30 @@ for row in cursor.execute("SELECT id,title,year,rating "  # Potential hidden gem
                           "ORDER BY RANDOM() "
                           "LIMIT 7"):
 
-    title = row[1].replace(' ', '+')
+    title = str(row[1].replace(' ', '+'))
     year = str(row[2])
     rating = row[3]
+
+    title = title.encode('ascii', errors='ignore')
+    title = title.decode('utf-8')
+
+
 
     response = urllib.request.urlopen('https://api.themoviedb.org/3/search/movie'
                                       '?api_key=' + key +
                                       '&query=' + title +
                                       '&year=' + year)
+
     data = json.loads(response.read().decode('utf-8'))
 
-    for items in data['results']:
-        if maxPopularity > float(items['popularity'] * (1.05 ** (2015 - int(year))) * (1/(rating**1.2))):
-            maxPopularity = float(items['popularity'] * (1.05 ** (2015 - int(year))) * (1/(rating**1.2)))
-            selection = row[0]
-            print(title)
+    if data['total_results'] > 0:
 
-        break
+        print(title, + float(data['results'][0]['popularity']) * (1.05 ** (2015 - int(year))) * (1/(rating**1.5)))
+        if maxPopularity > float(data['results'][0]['popularity']) * (1.05 ** (2015 - int(year))) * (1/(rating**1.5)):
+            maxPopularity = float(data['results'][0]['popularity']) * (1.05 ** (2015 - int(year))) * (1/(rating**1.5))
+            selection = row[0]
+            print('--')
+
 
 if selection >= 0:
 

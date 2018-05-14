@@ -1,6 +1,6 @@
 
 .*
-*.db
+*.db*
 *.config
 *.conf
 
