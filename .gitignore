@@ -1,1 +1,3 @@
-testingDatabase.db
+
+.*
+*.db
