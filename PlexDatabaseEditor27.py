@@ -13,8 +13,8 @@ print config.get('TMDB', 'API_KEY')
 response = urlopen('http://python.org/')
 key = config.get('TMDB', 'API_KEY')
 
-db = sqlite3.connect('PlexDatabase.db')            # remember to change this back and remove API-key
-#db = sqlite3.connect('testingDatabase.db')
+#db = sqlite3.connect('PlexDatabase.db')            # remember to change this back and remove API-key
+db = sqlite3.connect('testingDatabase.db')
 
 cursor = db.cursor()
 cursor2 = db.cursor()
@@ -24,14 +24,14 @@ RecentReleasesLimit = 7
 timestamp = datetime.now().replace(microsecond=0) + timedelta(days=+1)
 referenceDate = ''
 
-for row in cursor.execute("SELECT id,title,originally_available_at,rating_count "  # most recent movie for reference
+for row in cursor.execute("SELECT id,title,originally_available_at "  # most recent movie for reference
                           "FROM metadata_items "
                           "WHERE library_section_id = 1 "
                           "AND metadata_type = 1 "
                           "AND duration > 1 "
                           "ORDER BY originally_available_at DESC "
                           "LIMIT 1"):
-    print(row[3])
+
     referenceDate = datetime.strptime(row[2], '%Y-%m-%d %H:%M:%S') + timedelta(days=-14)
 
 ########################################################################################################################

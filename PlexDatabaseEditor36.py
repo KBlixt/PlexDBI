@@ -115,7 +115,7 @@ for row in cursor.execute("SELECT id,title,year,rating "  # Potential hidden gem
                                       '?api_key=' + key +
                                       '&query=' + title +
                                       '&year=' + year)
-    data = json.loads(response.read())
+    data = json.loads(response.read().decode('utf-8'))
 
     for items in data['results']:
         if maxPopularity > float(items['popularity'] * (1.05 ** (2015 - int(year))) * (1/(rating**1.2))):
