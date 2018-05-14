@@ -38,6 +38,7 @@ NOTES!!
     -  a script that is calling this script should be setup and a cronjob should be added for maximum effect
     -  other.. things.. ??? no clue what might go wrong.
     -  BACKUP YOUR DATABASES! just in case. though, so far I haven't managed to corrupted mine... yet.
+    -  testing the script is recommended to do on a testing db by copying the plex db and call it "testingDatabase.db"
 
 
 
