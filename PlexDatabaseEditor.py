@@ -4,12 +4,16 @@ from datetime import datetime
 from datetime import timedelta
 from urllib2 import Request, urlopen, URLError
 import json
+import ConfigParser
 
+config = ConfigParser.RawConfigParser()
+config.read('PlexDatabaseEditor.config')
 
+print config.get('TMDB', 'API_KEY')
 response = urlopen('http://python.org/')
-key = 'api key'
-db = sqlite3.connect('PlexDatabase.db')            # remember to change this back and remove API-key
-#db = sqlite3.connect('testingDatabase.db')
+key = config.get('TMDB', 'API_KEY')
+#db = sqlite3.connect('PlexDatabase.db')            # remember to change this back and remove API-key
+db = sqlite3.connect('testingDatabase.db')
 cursor = db.cursor()
 cursor2 = db.cursor()
 pos = 0
