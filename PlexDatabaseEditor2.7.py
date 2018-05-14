@@ -2,19 +2,19 @@
 import sqlite3
 from datetime import datetime
 from datetime import timedelta
-from urllib2 import Request, urlopen, URLError
 import json
-import ConfigParser
+import urllib.request
+import configparser
 
-config = ConfigParser.RawConfigParser()
+config = configparser.ConfigParser()
 config.read('PlexDatabaseEditor.config')
 
-print config.get('TMDB', 'API_KEY')
-response = urlopen('http://python.org/')
+print(config.get('TMDB', 'API_KEY'))
+response = urllib.request.urlopen('http://www.python.org/')
 key = config.get('TMDB', 'API_KEY')
 
-db = sqlite3.connect('PlexDatabase.db')            # remember to change this back and remove API-key
-#db = sqlite3.connect('testingDatabase.db')
+# db = sqlite3.connect('PlexDatabase.db')               # remember to change this back and remove API-key
+db = sqlite3.connect('testingDatabase.db')
 
 cursor = db.cursor()
 cursor2 = db.cursor()
@@ -111,26 +111,19 @@ for row in cursor.execute("SELECT id,title,year,rating "  # Potential hidden gem
     year = str(row[2])
     rating = row[3]
 
-    request = Request('https://api.themoviedb.org/3/search/movie'
-                      '?api_key=' + key +
-                      '&query=' + title +
-                      '&year=' + year)
+    response = urllib.request.urlopen('https://api.themoviedb.org/3/search/movie'
+                                      '?api_key=' + key +
+                                      '&query=' + title +
+                                      '&year=' + year)
+    data = json.loads(response.read())
 
-    try:
-        response = urlopen(request)
-        data = json.loads(response.read())
+    for items in data['results']:
+        if maxPopularity > float(items['popularity'] * (1.05 ** (2015 - int(year))) * (1/(rating**1.2))):
+            maxPopularity = float(items['popularity'] * (1.05 ** (2015 - int(year))) * (1/(rating**1.2)))
+            selection = row[0]
+            print(title)
 
-
-        for items in data['results']:
-            if maxPopularity > float(items['popularity'] * (1.05 ** (2015 - int(year))) * (1/(rating**1.2))):
-                maxPopularity = float(items['popularity'] * (1.05 ** (2015 - int(year))) * (1/(rating**1.2)))
-                selection = row[0]
-                print(title)
-
-            break
-
-    except URLError, e:
-        print 'No dice. Got an error code:', e
+        break
 
 if selection >= 0:
 
