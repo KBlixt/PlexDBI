@@ -29,7 +29,7 @@ don't... for now.
 
 ----------
 
-this script will edit the PlexMediaServer database directly, specifically it will change "added_at" in the
+this script will edit the PlexMediaServer database directly! specifically it will change "added_at" in the
 "metadata_items" table.
 ----------
 NOTES!!
