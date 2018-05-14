@@ -2,7 +2,7 @@
 
 a small script that is intended to manipulate Plex's homescreen table "Recently added movies" it can also use tmdb api
 if the user have an api key. otherwise that'll be ignored.
-
+----------
 whenever this script is run the Recently added movie table will be "refreshed" and from right to left
 the following movies will appear:
 
@@ -22,9 +22,16 @@ the following movies will appear:
 
 10. A movie selected randomly in the entire library
 
-this script will edit the PlexMediaServer database directly, specifically it will change "added_at" in the
-"metadata_items" table.
+----------
+INSTALLATION:
 
+don't... for now.
+
+----------
+
+this script will edit the PlexMediaServer database directly! specifically it will change "added_at" in the
+"metadata_items" table.
+----------
 NOTES!!
 
     very early stage script. currently these caveats and limitations exists:
