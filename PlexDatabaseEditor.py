@@ -12,8 +12,10 @@ config.read('PlexDatabaseEditor.config')
 print config.get('TMDB', 'API_KEY')
 response = urlopen('http://python.org/')
 key = config.get('TMDB', 'API_KEY')
-#db = sqlite3.connect('PlexDatabase.db')            # remember to change this back and remove API-key
-db = sqlite3.connect('testingDatabase.db')
+
+db = sqlite3.connect('PlexDatabase.db')            # remember to change this back and remove API-key
+#db = sqlite3.connect('testingDatabase.db')
+
 cursor = db.cursor()
 cursor2 = db.cursor()
 pos = 0

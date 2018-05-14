@@ -1,0 +1,10 @@
+#!/bin/bash
+
+sudo service plexmediaserver stop
+
+python /home/karl/scripts/git.projects/PlexDatabaseEditor/PlexDatabaseEditor.py
+
+sudo service plexmediaserver start
+
+
+
