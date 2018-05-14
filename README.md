@@ -22,6 +22,12 @@ the following movies will appear:
 
 10. A movie selected randomly in the entire library
 
+-------INSTALLATION:
+
+don't... for now.
+
+----------
+
 this script will edit the PlexMediaServer database directly, specifically it will change "added_at" in the
 "metadata_items" table.
 
