@@ -30,6 +30,7 @@ NOTES!!
     very early stage script. currently these caveats and limitations exists:
 
     -  library section id must be "1"
+    -  library craches if a movie name contain any character that python can't deal with.
     -  if you don't have a api key it will crash (setting up ignore on these segments is on the do-list
     -  the database must be symlinked into the folder
     -  plex should, preferably, not be online while this script is running and then restarted when it's finished.

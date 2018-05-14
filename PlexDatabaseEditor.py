@@ -5,8 +5,9 @@ from datetime import timedelta
 from urllib2 import Request, urlopen, URLError
 import json
 
+
 response = urlopen('http://python.org/')
-key = 'tmdb api'
+key = 'api key'
 db = sqlite3.connect('PlexDatabase.db')            # remember to change this back and remove API-key
 #db = sqlite3.connect('testingDatabase.db')
 cursor = db.cursor()
