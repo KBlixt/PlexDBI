@@ -1,8 +1,6 @@
-<<<<<<< HEAD
-testingDatabase.db
-.*
-=======
 
 .*
 *.db
->>>>>>> f232796030ad05c57451e1535655252036368151
+*.config
+*.conf
+
