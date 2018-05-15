@@ -45,7 +45,7 @@ class PlexDatabaseEditor:
     def get_reference_date(self, attempts_limit=5):
         self.cursor.execute("SELECT originally_available_at "  # most recent movie for reference
                             "FROM metadata_items "
-                            "WHERE library_section_id = 1 "
+                            "WHERE library_section_id = ? "
                             "AND metadata_type = 1 "
                             "AND duration > 1 "
                             "ORDER BY originally_available_at DESC "
