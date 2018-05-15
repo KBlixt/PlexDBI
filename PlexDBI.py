@@ -35,16 +35,16 @@ class PlexDBI:
             f = open("config", "w+")
             if self.sudo:
                 os.system("sudo chown --reference=" + os.getcwd() + "/PlexDBI.py config")
-                os.system("sudo chmod 777 config")
-            f.write('\n[SETTINGS]')
-            f.write('\nTMDB_API_KEY = ')
+            f.write('\n[REQUIRED]')
             f.write('\nMOVIE_LIBRARY_SECTION =')
+            f.write('\n[OPTIONAL]')
+            f.write('\nTMDB_API_KEY = ')
             f.close()
 
         config = configparser.ConfigParser()
         config.read('config')
-        self.key = config.get('SETTINGS', 'TMDB_API_KEY')
-        self.library_section = config.get('SETTINGS', 'MOVIE_LIBRARY_SECTION')
+        self.key = config.get('OPTIONAL', 'TMDB_API_KEY')
+        self.library_section = config.get('REQUIRED', 'MOVIE_LIBRARY_SECTION')
         self.check_library_section()
 
         movie_list = PlexDBI.recent_releases(self)
