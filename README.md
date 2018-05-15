@@ -3,7 +3,7 @@
 a small script that is intended to manipulate Plex's homescreen table "Recently added movies" it can also use the tmdb-api
 if the user have an api key. otherwise that'll be ignored.
 ----------
-whenever this script is run the Recently added movie table will be "refreshed" and from right to left
+whenever this script is run the Recently added movie table will be "refreshed" and from left to right
 the following movies will appear:
 
 1. The movie in the database with the latest release date.
