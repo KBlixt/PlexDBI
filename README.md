@@ -1,6 +1,8 @@
 # PlexDatabaseEditor
 
-a small script that is intended to manipulate Plex's homescreen table "Recently added movies" it can also use the tmdb-api
+only for python3 on linux systems
+
+a Python3 script that is intended to manipulate Plex's homescreen table "Recently added movies" it can also use the tmdb-api
 if the user have an api key. otherwise that'll be ignored.
 ----------
 whenever this script is run the Recently added movie table will be "refreshed" and from left to right
@@ -9,10 +11,10 @@ the following movies will appear:
 1. The movie in the database with the latest release date.
 2. The movie in the database with the 2nd latest release date.
 3. The movie in the database with the 3rd latest release date.
-4. The movie in the database with the 4th latest release date. Provided that it isn't more than 14 day older than 1.
-5. The movie in the database with the 5th latest release date. Provided that it isn't more than 14 day older than 1.
-6. The movie in the database with the 6th latest release date. Provided that it isn't more than 14 day older than 1.
-7. The movie in the database with the 7th latest release date. Provided that it isn't more than 14 day older than 1.
+4. The movie in the database with the 4th latest release date. Provided that it isn't more than 14 day older than the latest.
+5. The movie in the database with the 5th latest release date. Provided that it isn't more than 14 day older than the latest.
+6. The movie in the database with the 6th latest release date. Provided that it isn't more than 14 day older than the latest.
+7. The movie in the database with the 7th latest release date. Provided that it isn't more than 14 day older than the latest.
 
 8. A movie that's older than 10 years with a imdb score of 8 or more will be placed here. "Old but Gold"
 
