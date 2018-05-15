@@ -59,13 +59,16 @@ class PlexDatabaseEditor:
                 library_is_good = True
 
         if not library_is_good:
+            print('Your MOVIE_LIBRARY_SECTION parameter in the config is not a Movie library.')
+            print('These libraries are movie libraries and can be used in this script:')
+            print('--------------------------------------------------------------------------')
+
             for library in self.cursor.execute("SELECT id, name "
                                                "FROM library_sections "
                                                "WHERE language IS NOT 'xn' "
                                                "AND section_type = 1 "
                                                "ORDER BY id ASC "):
-                print('Your MOVIE_LIBRARY_SECTION parameter in the config is not a Movie library.')
-                print('These libraries are movie libraries and can be used in this script:')
+
                 print('The library "' + library[1] + '" have section_id: ' + str(library[0]) + '.')
                 sys.exit()
 
