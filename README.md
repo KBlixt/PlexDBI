@@ -34,7 +34,7 @@ and then add a "config" file:
 
     nano config
 
-and copy this into it: OBS! remember to insert the information in the config file!
+and copy this into it: REMEMBER! Insert your information in the config file!
 
     [SETTINGS]
     TMDB_API_KEY = [your tmdb api key]
