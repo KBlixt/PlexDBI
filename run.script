@@ -2,7 +2,7 @@
 
 sudo service plexmediaserver stop
 
-python /home/karl/scripts/git.projects/PlexDatabaseEditor/PlexDatabaseEditor.py
+python3.6 /home/karl/scripts/git.projects/PlexDatabaseEditor/PlexDatabaseEditor36.py
 
 sudo service plexmediaserver start
 
