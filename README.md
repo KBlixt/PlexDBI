@@ -41,7 +41,7 @@ and how to fix it.
     sudo python3 PlexDatabaseEditor.py
 
 then it's up to you if you wish to add it to a crontab schedule, personally i've got it scheduled once a day at 10:30
-with sudo privileges.
+with sudo privileges. (or that is what I would have if I weren't testing my script, atm I'm running it every 10 min.)
 
     30 10 * * * cd /opt/PlexDatabaseEditor/  && sudo /usr/bin/python3 /opt/PlexDatabaseEditor/PlexDatabaseEditor.py
 
