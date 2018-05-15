@@ -39,7 +39,10 @@ class PlexDatabaseEditor:
 
         movie_list = PlexDatabaseEditor.recent_releases(self)
         movie_list = movie_list + PlexDatabaseEditor.old_but_gold(self)
-        movie_list = movie_list + PlexDatabaseEditor.hidden_gem(self)
+        if self.key != '':
+            movie_list = movie_list + PlexDatabaseEditor.hidden_gem(self)
+        else:
+            print("INFO: You have not specified a tmdb api key.")
         movie_list = movie_list + PlexDatabaseEditor.random(self)
         PlexDatabaseEditor.commit(self, movie_list)
 
