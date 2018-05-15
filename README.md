@@ -28,7 +28,7 @@ INSTALLATION:
 
 download the PlexDatabaseEditor.py file and put it somewhere. for example:
 
-    cd opt && git clone https://github.com/KBlixt/PlexDatabaseEditor.git
+    cd /opt && git clone https://github.com/KBlixt/PlexDatabaseEditor.git
 
 claim ownership for the folder
 
