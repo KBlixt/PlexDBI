@@ -51,7 +51,6 @@ NOTES!!
 
     very early stage script. currently these caveats and limitations exists:
 
-    -  if you don't have a api key it will crash (setting up ignore on these segments is on the do-list
     -  a script that is calling this script should be setup and a cronjob should be added for maximum effect
     -  BACKUP YOUR DATABASES! just in case. though, so far I haven't managed to corrupted mine... yet.
     -  the database must be symlinked into the folder
