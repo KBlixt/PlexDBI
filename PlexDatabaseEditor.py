@@ -300,6 +300,8 @@ class PlexDatabaseEditor:
         if self.sudo:
             print('Starting plexmediaserver:')
             os.system("sudo service plexmediaserver start")
+        else:
+            print('you can now proceed to restart your plex server')
 
     @staticmethod
     def line_number():
