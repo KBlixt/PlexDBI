@@ -286,6 +286,7 @@ class PlexDatabaseEditor:
             os.system("sudo service plexmediaserver stop")
 
         pos = 0
+        print('Processing movie list...')
         timestamp = datetime.now().replace(microsecond=0) + timedelta(days=+1)
         for movie in id_list:
             now = timestamp + timedelta(seconds=-pos)
@@ -293,8 +294,9 @@ class PlexDatabaseEditor:
                                 "SET added_at = ?"
                                 "WHERE id = ?", (now.isoformat().replace('T', ' '), movie,))
             pos += 1
+        print('Movie list processed, committing to db')
         self.db.commit()
-
+        print('changes comitted')
         if self.sudo:
             print('Starting plexmediaserver:')
             os.system("sudo service plexmediaserver start")
