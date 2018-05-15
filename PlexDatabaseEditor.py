@@ -11,7 +11,7 @@ import time
 import os
 
 
-class PlexDatabaseEditor:
+class PlexDBI:
 
     def __init__(self):
 
@@ -34,7 +34,7 @@ class PlexDatabaseEditor:
         if not os.path.isfile('config'):
             f = open("config", "w+")
             if self.sudo:
-                os.system("sudo chown --reference=" + os.getcwd() + "/PlexDatabaseEditor.py config")
+                os.system("sudo chown --reference=" + os.getcwd() + "/PlexDBI.py config")
                 os.system("sudo chmod 777 config")
             f.write('\n[SETTINGS]')
             f.write('\nTMDB_API_KEY = ')
@@ -47,14 +47,14 @@ class PlexDatabaseEditor:
         self.library_section = config.get('SETTINGS', 'MOVIE_LIBRARY_SECTION')
         self.check_library_section()
 
-        movie_list = PlexDatabaseEditor.recent_releases(self)
-        movie_list = movie_list + PlexDatabaseEditor.old_but_gold(self)
+        movie_list = PlexDBI.recent_releases(self)
+        movie_list = movie_list + PlexDBI.old_but_gold(self)
         if self.key != '':
-            movie_list = movie_list + PlexDatabaseEditor.hidden_gem(self)
+            movie_list = movie_list + PlexDBI.hidden_gem(self)
         else:
             print("INFO: You have not specified a tmdb api key.")
-        movie_list = movie_list + PlexDatabaseEditor.random(self)
-        PlexDatabaseEditor.commit(self, movie_list)
+        movie_list = movie_list + PlexDBI.random(self)
+        PlexDBI.commit(self, movie_list)
 
         end = time.time()
         self.db.close()
@@ -121,7 +121,7 @@ class PlexDatabaseEditor:
         return reference_date
 
     def recent_releases(self, recent_releases_minimum=3, recent_releases_limit=7):
-        reference_date = PlexDatabaseEditor.get_reference_date(self)
+        reference_date = PlexDBI.get_reference_date(self)
         local_movie_list = list()
         if recent_releases_limit > 0:
             for movieInfo in self.cursor.execute("SELECT id,title "  # modifies 7 movies within 14 days...
@@ -349,4 +349,4 @@ class PlexDatabaseEditor:
         return inspect.currentframe().f_back.f_lineno
 
 
-plex = PlexDatabaseEditor()
+plex = PlexDBI()

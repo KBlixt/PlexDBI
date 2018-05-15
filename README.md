@@ -1,4 +1,4 @@
-# PlexDatabaseEditor
+# PlexDBI
 
 only tested on python3 on linux systems but could probably be ported to windows with some tinkering. the source code is
 identical and it runs on windows with python3.6. unsure about other systems, but in theory you should be able to get it
@@ -30,20 +30,20 @@ the following movies will appear:
 ----------
 INSTALLATION:
 
-download the PlexDatabaseEditor.py file and put it somewhere. for example:
+download the PlexDBI.py file and put it somewhere. for example:
 
-    cd /opt && git clone https://github.com/KBlixt/PlexDatabaseEditor.git && cd PlexDatabaseEditor
+    cd /opt && git clone https://github.com/KBlixt/PlexDBI.git && cd PlexDBI
 
 at this point you can run it if you give it sudo privileges, it will set up the syslink and the config file for you.
 but you'll still have to configure the config file. but if you just run the script it will tell you what's wrong
 and how to fix it.
 
-    sudo python3 PlexDatabaseEditor.py
+    sudo python3 PlexDBI.py
 
 then it's up to you if you wish to add it to a crontab schedule, personally i've got it scheduled once a day at 10:30
 with sudo privileges. (or that is what I would have if I weren't testing my script, atm I'm running it every 10 min.)
 
-    30 10 * * * cd /opt/PlexDatabaseEditor/  && sudo /usr/bin/python3 /opt/PlexDatabaseEditor/PlexDatabaseEditor.py
+    30 10 * * * cd /opt/PlexDBI/  && sudo /usr/bin/python3 /opt/PlexDBI/PlexDBI.py
 
 ----------
 
