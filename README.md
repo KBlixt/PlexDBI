@@ -28,7 +28,7 @@ the following movies will appear:
 10. A movie selected randomly in the entire library
 
 ----------
-INSTALLATION:
+Ubuntu INSTALLATION:
 
 download the PlexDBI.py file and put it somewhere. for example:
 
@@ -46,6 +46,11 @@ with sudo privileges. (or that is what I would have if I weren't testing my scri
     30 10 * * * cd /opt/PlexDBI/  && sudo /usr/bin/python3 /opt/PlexDBI/PlexDBI.py
 
 ----------
+Other INSTALLATION
+
+I really haven't tried yet, the source code should be good for windows with python 3.6.5. and other OS:s i really haven't got a clue.
+
+---------
 
 if you don't want to give it sudo privileges then you'll have make a symlink for the database. i.e:
 
