@@ -12,7 +12,7 @@ fi
 
 #running script
 sudo service plexmediaserver stop
-sudo /usr/bin/python3.6 ${PATH_TO_SCRIPT}PlexDatabaseEditor36.py > $TEMPORARY
+sudo /usr/bin/python3 ${PATH_TO_SCRIPT}PlexDatabaseEditor.py > $TEMPORARY
 sudo service plexmediaserver start
 
 #reporting:
