@@ -12,6 +12,18 @@ import time
 import os
 
 
+if not os.path.isfile('PlexDatabase.db'):
+    os.system('ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/'
+              'Plug-in Support/Databases/com.plexapp.plugins.library.db" "'
+              + os.getcwd() + '/PlexDatabase.db"')
+
+    print('ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/'
+              'Plug-in Support/Databases/com.plexapp.plugins.library.db" "'
+              + os.getcwd() + '/PlexDatabase.db"')
+
+
+
+
 class PlexDatabaseEditor:
 
     def __init__(self):
