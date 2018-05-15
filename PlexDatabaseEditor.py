@@ -281,8 +281,8 @@ class PlexDatabaseEditor:
 
     def commit(self, id_list):
         if self.sudo:
-            print('Stopping plexmediaserver:')
-            os.system("sudo service plexmediaserver stop")
+            print('Stopping plexmediaserver:...')
+            os.system("sudo service plexmediaserver stop.")
 
         pos = 0
         print('Processing movie list...')
@@ -293,12 +293,12 @@ class PlexDatabaseEditor:
                                 "SET added_at = ?"
                                 "WHERE id = ?", (now.isoformat().replace('T', ' '), movie,))
             pos += 1
-        print('Movie list processed, committing to db')
+        print('Movie list processed, committing to db.')
         self.db.commit()
-        print('changes comitted')
+        print('changes comitted.')
         if self.sudo:
-            print('Starting plexmediaserver:')
-            os.system("sudo service plexmediaserver start")
+            print('Starting plexmediaserver...')
+            os.system("sudo service plexmediaserver start.")
         else:
             print('you can now proceed to restart your plex server')
 
