@@ -17,7 +17,7 @@ class PlexDatabaseEditor:
     def __init__(self):
         start = time.time()
         try:
-            self.sudo = '0' == os.getuid()
+            self.sudo = 0 == os.getuid()
             print(str(os.getuid()))
         except AttributeError as e:
             print(e.args)
