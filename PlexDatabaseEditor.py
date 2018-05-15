@@ -9,6 +9,7 @@ import configparser
 import inspect
 import sys
 import time
+import os
 
 
 class PlexDatabaseEditor:
@@ -262,6 +263,7 @@ class PlexDatabaseEditor:
         return local_movie_list
 
     def commit(self, id_list):
+        os.system("sudo service plexmediaserver stop")
         pos = 0
         timestamp = datetime.now().replace(microsecond=0) + timedelta(days=+1)
         for movie in id_list:
@@ -271,10 +273,14 @@ class PlexDatabaseEditor:
                                 "WHERE id = ?", (now.isoformat().replace('T', ' '), movie,))
             pos += 1
             self.db.commit()
+            os.system("sudo service plexmediaserver start")
 
     @staticmethod
     def line_number():
         return inspect.currentframe().f_back.f_lineno
+
+
+
 
 
 plex = PlexDatabaseEditor()
