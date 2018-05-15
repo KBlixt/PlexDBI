@@ -22,8 +22,6 @@ class PlexDatabaseEditor:
             print(e.args)
             self.sudo = False
 
-        config = configparser.ConfigParser()
-        config.read('config')
         if self.sudo:
             if not os.path.isfile('PlexDatabase.db'):
                 os.system('ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/'
@@ -32,12 +30,16 @@ class PlexDatabaseEditor:
 
         self.db = sqlite3.connect('PlexDatabase.db')  # remember to change this back and remove API-key
         self.cursor = self.db.cursor()
-        if not os.path.isfile('config'):
-            os.system('touch ' + os.getcwd() + '/config')
-            os.system('echo "[SETTINGS]"')
-            os.system('echo "TMDB_API_KEY ="')
-            os.system('echo "MOVIE_LIBRARY_SECTION ="')
 
+        if not os.path.isfile('config'):
+            f = open("config", "w+")
+            f.write('\n  [SETTINGS]')
+            f.write('\n  TMDB_API_KEY = ')
+            f.write('\n  MOVIE_LIBRARY_SECTION =')
+            f.close()
+
+        config = configparser.ConfigParser()
+        config.read('config')
         self.key = config.get('SETTINGS', 'TMDB_API_KEY')
         self.library_section = config.get('SETTINGS', 'MOVIE_LIBRARY_SECTION')
         self.check_library_section()
@@ -67,7 +69,7 @@ class PlexDatabaseEditor:
                 library_is_good = True
 
         if not library_is_good:
-            print('Your MOVIE_LIBRARY_SECTION parameter in the config is not a Movie library.')
+            print('Your MOVIE_LIBRARY_SECTION parameter in the config file is not a Movie library.')
             print('These libraries are movie libraries and can be used in this script:')
             print('--------------------------------------------------------------------------')
 
