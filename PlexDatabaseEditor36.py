@@ -5,55 +5,51 @@ from datetime import timedelta
 import json
 import urllib.request
 import configparser
-import string
 
 config = configparser.ConfigParser()
 config.read('PlexDatabaseEditor.config')
 
-print(config.get('TMDB', 'API_KEY'))
+
 response = urllib.request.urlopen('http://www.python.org/')
 key = config.get('TMDB', 'API_KEY')
 
-# db = sqlite3.connect('PlexDatabase.db')               # remember to change this back and remove API-key
-db = sqlite3.connect('testingDatabase.db')
-
+db = sqlite3.connect('PlexDatabase.db')               # remember to change this back and remove API-key
 cursor = db.cursor()
 cursor2 = db.cursor()
+
 pos = 0
 RecentReleasesMinimum = 3
 RecentReleasesLimit = 7
 timestamp = datetime.now().replace(microsecond=0) + timedelta(days=+1)
 referenceDate = ''
 
-cursor.execute("SELECT id,title,originally_available_at,rating_count "  # most recent movie for reference
-                      "FROM metadata_items "
-                      "WHERE library_section_id = 1 "
-                      "AND metadata_type = 1 "
-                      "AND duration > 1 "
-                      "ORDER BY originally_available_at DESC "
-                      "LIMIT 1")
-rresponse = cursor.fetchone()
-referenceDate = datetime.strptime(rresponse[2], '%Y-%m-%d %H:%M:%S') + timedelta(days=-14)
+cursor.execute("SELECT originally_available_at,rating_count "  # most recent movie for reference
+               "FROM metadata_items "
+               "WHERE library_section_id = 1 "
+               "AND metadata_type = 1 "
+               "AND duration > 1 "
+               "ORDER BY originally_available_at DESC "
+               "LIMIT 1")
 
+referenceDateStamp = datetime.strptime(cursor.fetchone()[0], '%Y-%m-%d %H:%M:%S') + timedelta(days=-14)
 ########################################################################################################################
 
 if RecentReleasesLimit > 0:
-    for row in cursor.execute("SELECT id,title,originally_available_at "  # 7 movies within 14 days...
+    for row in cursor.execute("SELECT id,title,originally_available_at "  # modifies 7 movies within 14 days...
                               "FROM metadata_items "
                               "WHERE library_section_id = 1 "
                               "AND metadata_type = 1 "
                               "AND duration > 1 "
                               "AND originally_available_at > ? "
                               "ORDER BY originally_available_at DESC "
-                              "LIMIT ? ", (referenceDate.isoformat().replace('T', ' '), RecentReleasesLimit)):
+                              "LIMIT ? ", (referenceDateStamp.isoformat().replace('T', ' '), RecentReleasesLimit)):
 
         now = timestamp + timedelta(seconds=10-pos)
-
         cursor2.execute("UPDATE metadata_items "
                         "SET added_at = ?"
                         "WHERE id = ?", (now.isoformat().replace('T', ' '), row[0],))
-
         pos = pos + 1
+
 db.commit()
 ########################################################################################################################
 
@@ -65,14 +61,13 @@ if RecentReleasesMinimum-pos > 0:
                               "AND duration > 1 "
                               "AND originally_available_at < ? "
                               "ORDER BY originally_available_at DESC "
-                              "LIMIT ?", (referenceDate.isoformat().replace('T', ' '), RecentReleasesMinimum - pos,)):
+                              "LIMIT ?", (referenceDateStamp.isoformat().replace('T', ' '),
+                                          RecentReleasesMinimum - pos,)):
 
         now = timestamp + timedelta(seconds=10-pos)
-
         cursor2.execute("UPDATE metadata_items "
                         "SET added_at = ?"
                         "WHERE id = ?", (now.isoformat().replace('T', ' '), row[0],))
-
         pos = pos + 1
 
 db.commit()
@@ -89,14 +84,14 @@ for row in cursor.execute("SELECT id,title "  # old but gold
                           "LIMIT 1"):
 
     now = timestamp + timedelta(seconds=10-pos)
-
     cursor2.execute("UPDATE metadata_items "
                     "SET added_at = ?"
                     "WHERE id = ?", (now.isoformat().replace('T', ' '), row[0],))
-
     pos = pos + 1
+
 db.commit()
 ########################################################################################################################
+
 maxPopularity = 100000.0
 selection = 20
 for row in cursor.execute("SELECT id,title,year,rating "  # Potential hidden gem
@@ -112,10 +107,8 @@ for row in cursor.execute("SELECT id,title,year,rating "  # Potential hidden gem
     year = str(row[2])
     rating = row[3]
 
-    title = title.encode('ascii', errors='ignore')
+    title = title.encode('ascii', errors='ignore')  # sanitise title from unicode characters
     title = title.decode('utf-8')
-
-
 
     response = urllib.request.urlopen('https://api.themoviedb.org/3/search/movie'
                                       '?api_key=' + key +
@@ -136,13 +129,12 @@ for row in cursor.execute("SELECT id,title,year,rating "  # Potential hidden gem
 if selection >= 0:
 
     now = timestamp + timedelta(seconds=10 - pos)
-
     cursor2.execute("UPDATE metadata_items "
                     "SET added_at = ?"
                     "WHERE id = ?", (now.isoformat().replace('T', ' '), selection,))
-
     pos = pos + 1
-    db.commit()
+
+db.commit()
 ########################################################################################################################
 
 for row in cursor.execute("SELECT id,title "  # Random
@@ -154,13 +146,13 @@ for row in cursor.execute("SELECT id,title "  # Random
                           "LIMIT 1"):
 
     now = timestamp + timedelta(seconds=10-pos)
-
     cursor2.execute("UPDATE metadata_items "
                     "SET added_at = ?"
                     "WHERE id = ?", (now.isoformat().replace('T', ' '), row[0],))
-
     pos = pos + 1
+
 db.commit()
 ########################################################################################################################
 
 db.close()
+print("---script was completed---")
