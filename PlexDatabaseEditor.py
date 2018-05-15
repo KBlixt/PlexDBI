@@ -29,6 +29,7 @@ class PlexDatabaseEditor:
         self.cursor = self.db.cursor()
 
         self.key = config.get('TMDB', 'API_KEY')
+        self.library_section = config.get('DB_INFO', 'LIBRARY_SECTION')
 
         movie_list = PlexDatabaseEditor.recent_releases(self)
         movie_list = movie_list + PlexDatabaseEditor.old_but_gold(self)
@@ -48,7 +49,7 @@ class PlexDatabaseEditor:
                             "AND metadata_type = 1 "
                             "AND duration > 1 "
                             "ORDER BY originally_available_at DESC "
-                            "LIMIT ?", (attempts_limit,))
+                            "LIMIT ?", (self.library_section, attempts_limit,))
 
         reference_date = ''
         attempt_number = 0
@@ -74,12 +75,11 @@ class PlexDatabaseEditor:
         if recent_releases_limit > 0:
             for movieInfo in self.cursor.execute("SELECT id,title "  # modifies 7 movies within 14 days...
                                                  "FROM metadata_items "
-                                                 "WHERE library_section_id = 1 "
-                                                 "AND metadata_type = 1 "
+                                                 "WHERE library_section_id = ? "
                                                  "AND duration > 1 "
                                                  "AND originally_available_at > ? "
                                                  "ORDER BY originally_available_at DESC "
-                                                 "LIMIT ?", (reference_date.isoformat().replace('T', ' '),
+                                                 "LIMIT ?", (self.library_section, reference_date.isoformat().replace('T', ' '),
                                                              recent_releases_limit)):
 
                 movie_id = movieInfo[0]
@@ -102,12 +102,11 @@ class PlexDatabaseEditor:
         if recent_releases_minimum-len(local_movie_list) > 0:
             for movieInfo in self.cursor.execute("SELECT id,title "  # ...but at least the last 3 movies
                                                  "FROM metadata_items "
-                                                 "WHERE library_section_id = 1 "
-                                                 "AND metadata_type = 1 "
+                                                 "WHERE library_section_id = ? "
                                                  "AND duration > 1 "
                                                  "AND originally_available_at < ? "
                                                  "ORDER BY originally_available_at DESC "
-                                                 "LIMIT ?", (reference_date.isoformat().replace('T', ' '),
+                                                 "LIMIT ?", (self.library_section, reference_date.isoformat().replace('T', ' '),
                                                              recent_releases_minimum - len(local_movie_list),)):
 
                 movie_id = movieInfo[0]
@@ -136,10 +135,9 @@ class PlexDatabaseEditor:
                                               "WHERE id IN (SELECT id FROM metadata_items ORDER BY RANDOM()) "
                                               "AND originally_available_at < ? "
                                               "AND rating > 8 "
-                                              "AND library_section_id = 1 "
-                                              "AND metadata_type = 1 "
+                                              "AND library_section_id = ? "
                                               "ORDER BY RANDOM() "
-                                              "LIMIT ?", (datetime.now() + timedelta(days=+3652), count,)):
+                                              "LIMIT ?", (datetime.now() + timedelta(days=+3652), self.library_section, count,)):
 
             movie_id = movie_info[0]
             title = str(movie_info[1])
@@ -170,11 +168,10 @@ class PlexDatabaseEditor:
             for movie_info in self.cursor.execute("SELECT id,title,year,rating "  # Potential hidden gem
                                                   "FROM metadata_items "
                                                   "WHERE id IN (SELECT id FROM metadata_items ORDER BY RANDOM()) "
-                                                  "AND library_section_id = 1 "
-                                                  "AND metadata_type = 1 "
+                                                  "AND library_section_id = ? "
                                                   "AND rating > 1 "
                                                   "ORDER BY RANDOM() "
-                                                  "LIMIT 8"):
+                                                  "LIMIT 8", (self.library_section)):
                 movie_id = movie_info[0]
                 title = str(movie_info[1])
                 year = str(movie_info[2])
@@ -243,10 +240,9 @@ class PlexDatabaseEditor:
         for row in self.cursor.execute("SELECT id,title  "  # Random
                                        "FROM metadata_items "
                                        "WHERE id IN (SELECT id FROM metadata_items ORDER BY RANDOM()) "
-                                       "AND library_section_id = 1 "
-                                       "AND metadata_type = 1 "
+                                       "AND library_section_id = ? "
                                        "ORDER BY RANDOM() "
-                                       "LIMIT ?", (count,)):
+                                       "LIMIT ?", (self.library_section, count,)):
 
             movie_id = row[0]
             title = str(row[1])
