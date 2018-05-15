@@ -31,22 +31,19 @@ don't... for now.
 
 this script will edit the PlexMediaServer database directly! specifically it will change "added_at" in the
 "metadata_items" table.
+
+  BACKUP YOUR DATABASES! just in case. though, so far I haven't managed to corrupted mine... yet.
 ----------
 NOTES!!
 
     very early stage script. currently these caveats and limitations exists:
 
-    -  library section id must be "1"
-    -  library craches if a movie name contain any character that python can't deal with.
+    -  library section id and metadata_id must be "1"
     -  if you don't have a api key it will crash (setting up ignore on these segments is on the do-list
-    -  the database must be symlinked into the folder
-    -  plex should, preferably, not be online while this script is running and then restarted when it's finished.
-    -  i think that installing sqlite3 is a requirement, but i'm unsure
-    -  I've only run this on python 2.7.12 in ubuntu 16.04 any other OS and python versions is unknown if they work.
     -  a script that is calling this script should be setup and a cronjob should be added for maximum effect
-    -  other.. things.. ??? no clue what might go wrong.
     -  BACKUP YOUR DATABASES! just in case. though, so far I haven't managed to corrupted mine... yet.
-    -  testing the script is recommended to do on a testing db by copying the plex db and call it "testingDatabase.db"
+    -  add reliability regarding select statements so no None values gets mixed in.
+    -  the database must be symlinked into the folder
 
 
 

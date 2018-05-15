@@ -120,7 +120,6 @@ for row in cursor.execute("SELECT id,title,year,rating "  # Potential hidden gem
         response = urlopen(request)
         data = json.loads(response.read())
 
-
         for items in data['results']:
             if maxPopularity > float(items['popularity'] * (1.05 ** (2015 - int(year))) * (1/(rating**1.2))):
                 maxPopularity = float(items['popularity'] * (1.05 ** (2015 - int(year))) * (1/(rating**1.2)))
