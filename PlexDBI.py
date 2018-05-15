@@ -324,7 +324,7 @@ class PlexDBI:
     def commit(self, id_list):
         if self.sudo:
             print('Stopping plexmediaserver:...')
-            os.system("sudo service plexmediaserver stop.")
+            os.system("sudo service plexmediaserver stop")
 
         pos = 0
         print('Processing movie list...')
@@ -340,7 +340,7 @@ class PlexDBI:
         print('changes comitted.')
         if self.sudo:
             print('Starting plexmediaserver...')
-            os.system("sudo service plexmediaserver start.")
+            os.system("sudo service plexmediaserver start")
         else:
             print('you can now proceed to restart your plex server')
 
