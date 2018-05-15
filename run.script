@@ -16,6 +16,18 @@ sudo /usr/bin/python3 ${PATH_TO_SCRIPT}PlexDatabaseEditor.py > $TEMPORARY
 sudo service plexmediaserver start
 
 #reporting:
+
+RESULT=$(grep -w 'script failed' $TEMPORARY)
+if [ "$RESULT" == "---script failed---" ] ; then
+	echo "fail"
+	cat $TEMPORARY > "${PATH_TO_SCRIPT}crash.log"
+	echo "[`date`] -------------------------------------------------------------------" >> "${PATH_TO_SCRIPT}crash.log"
+	exit 1
+else
+	echo "success"
+
+fi
+
 RESULT=$(grep -w 'script was completed' $TEMPORARY)
 if [ "$RESULT" == "---script was completed---" ] ; then
 	echo "success"
@@ -25,14 +37,6 @@ else
 	echo "[`date`] -------------------------------------------------------------------" >> "${PATH_TO_SCRIPT}crash.log"	
 fi
 
-RESULT=$(grep -w 'script failed' $TEMPORARY)
-if [ "$RESULT" == "---script failed---" ] ; then
-	echo "fail"
-	cat $TEMPORARY > "${PATH_TO_SCRIPT}crash.log"
-	echo "[`date`] -------------------------------------------------------------------" >> "${PATH_TO_SCRIPT}crash.log"
-else
-	echo "success"
-	
-fi
+
 
 exit 1
