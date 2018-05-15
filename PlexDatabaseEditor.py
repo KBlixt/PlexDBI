@@ -46,6 +46,15 @@ class PlexDatabaseEditor:
         print("script completed in " + str(int(end - start)) + " seconds.")
         print("---script was completed---")
 
+    def print_library_list(self):
+        for library in self.cursor.execute("SELECT id, name "
+                                           "FROM library_sections "
+                                           "WHERE language IS NOT 'xn' "
+                                           "AND section_type = 1 "
+                                           "ORDER BY id ASC "):
+            print(library[0] + ' have section id "' + library[1] + '.')
+
+
     def get_reference_date(self, attempts_limit=5):
         try:
             self.cursor.execute("SELECT originally_available_at "  # most recent movie for reference
@@ -58,7 +67,10 @@ class PlexDatabaseEditor:
         except Exception:
             print('Remember to fill in the MOVIE_LIBRARY_SECTION in the config file. ')
             print('Also make sure that the "PlexDatabase.db" syslink isn\'t broken. ')
-            print('Exiting. ')
+            print('here is a list on viable libraries you have: ')
+            self.print_library_list
+            print('----------------------------------------------------------------')
+            print('Exiting')
 
             sys.exit()
         reference_date = ''
