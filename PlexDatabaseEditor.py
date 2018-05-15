@@ -28,8 +28,8 @@ class PlexDatabaseEditor:
         self.db = sqlite3.connect('PlexDatabase.db')  # remember to change this back and remove API-key
         self.cursor = self.db.cursor()
 
-        self.key = config.get('TMDB', 'API_KEY')
-        self.library_section = config.get('DB_INFO', 'LIBRARY_SECTION')
+        self.key = config.get('SETTINGS', 'TMDB_API_KEY')
+        self.library_section = config.get('SETTINGS', 'MOVIE_LIBRARY_SECTION')
 
         movie_list = PlexDatabaseEditor.recent_releases(self)
         movie_list = movie_list + PlexDatabaseEditor.old_but_gold(self)
