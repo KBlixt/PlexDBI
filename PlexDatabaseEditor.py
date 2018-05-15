@@ -12,15 +12,6 @@ import time
 import os
 
 
-if not os.path.isfile('PlexDatabase.db'):
-    os.system('ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/'
-              'Plug-in Support/Databases/com.plexapp.plugins.library.db" "'
-              + os.getcwd() + '/PlexDatabase.db"')
-
-
-
-
-
 class PlexDatabaseEditor:
 
     def __init__(self):
@@ -28,6 +19,11 @@ class PlexDatabaseEditor:
 
         config = configparser.ConfigParser()
         config.read('PlexDatabaseEditor.config')
+
+        if not os.path.isfile('PlexDatabase.db'):
+            os.system('ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/'
+                      'Plug-in Support/Databases/com.plexapp.plugins.library.db" "'
+                      + os.getcwd() + '/PlexDatabase.db"')
 
         self.db = sqlite3.connect('PlexDatabase.db')  # remember to change this back and remove API-key
         self.cursor = self.db.cursor()
