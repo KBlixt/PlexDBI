@@ -28,22 +28,26 @@ INSTALLATION:
 
 download the PlexDatabaseEditor.py file and put it somewhere. for example:
 
-    git clone https://github.com/KBlixt/PlexDatabaseEditor.git /opt/PlexDatabaseEditor
+    cd opt && git clone https://github.com/KBlixt/PlexDatabaseEditor.git
 
-add a "config" into that folder with the following information in it:
+claim ownership for the folder
+
+    sudo chmod -R user:user PlexDatabaseEditor && cd PlexDatabaseEditor
+
+and then add a "config" file:
+
+    nano /opt/PlexDatabaseEditor/config
+
+and copy this into it:
 
     [SETTINGS]
     TMDB_API_KEY = [your tmdb api key]
     MOVIE_LIBRARY_SECTION = [library section]
 
-copy it into:
+at this point you can run it if you give it sudo privileges, it will set up the syslink for you.
+if you don't want to give it sudo privileges then make a symlink for the database using:
 
-    nano /opt/PlexDatabaseEditor/config
-
-at this point you can run it if you give it sudo privileges. if you don't want to give it sudo privileges then make a
-symlink for the database using:
-
-      ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db" "/opt/PlexDatabaseEditor/PlexDatabase.db"
+    ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db" "/opt/PlexDatabaseEditor/PlexDatabase.db"
 
 then it's up to you if you wish to it to a crontab, personally i've got it scheduled once a day at 10:30 with sudo privileges.
 
