@@ -1,10 +1,12 @@
 # PlexDatabaseEditor
 
-only for python3 on linux systems
+only tested on python3 on linux systems but could probably be ported to windows with some tinkering. the source code is identical and it runs on windows with python3.6. unsure about other systems, but in theory you should be able to get it working as long as the system can run python3 and sqlite.
 
-a Python3 script that is intended to manipulate Plex's homescreen table "Recently added movies" it can also use the tmdb-api
-if the user have an api key. otherwise that'll be ignored.
 ----------
+
+this Python3 script is intended to manipulate Plex's homescreen table "Recently added movies" it can also use the tmdb-api
+if the user have an api key. otherwise that'll be ignored.
+
 whenever this script is run the Recently added movie table will be "refreshed" and from left to right
 the following movies will appear:
 
@@ -34,11 +36,12 @@ and then add a "config" file:
 
     nano config
 
-and copy this into it: REMEMBER! Insert your information in the config file!
+and copy this into it: 
 
     [SETTINGS]
-    TMDB_API_KEY = [your tmdb api key]
-    MOVIE_LIBRARY_SECTION = [library section]
+    TMDB_API_KEY = your_tmdb_api_key
+    MOVIE_LIBRARY_SECTION = library_section
+REMEMBER! Insert your information in the config file!
 
 at this point you can run it if you give it sudo privileges, it will set up the syslink for you.
 if you don't want to give it sudo privileges then make a symlink for the database using:
