@@ -58,7 +58,7 @@ class PlexDatabaseEditor:
                             "LIMIT ?", (self.library_section, attempts_limit,))
 
 
-            sys.exit()
+
         reference_date = ''
         attempt_number = 0
         for attempt in self.cursor.fetchall():
