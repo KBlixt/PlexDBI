@@ -1,7 +1,10 @@
 #!/bin/bash
-
-
 #
+## This script will shut down Plex while the script is running and will cause some downtime
+## If the script it self is given
+#
+#
+## Enter path to the directory, not to the script directly.
 PATH_TO_SCRIPT_DIRECTORY="$1"
 
 #sanity check
@@ -14,12 +17,12 @@ fi
 TEMPORARY="/tmp/PlexDatabaseEditor.out.tmp"
 #running script
 sudo service plexmediaserver stop
-sudo /usr/bin/python3 ${PATH_TO_SCRIPT_DIRECTORY}PlexDatabaseEditor.py > $TEMPORARY
+/usr/bin/python3 ${PATH_TO_SCRIPT_DIRECTORY}PlexDatabaseEditor.py > $TEMPORARY
 sudo service plexmediaserver start
 cat $TEMPORARY > "${PATH_TO_SCRIPT_DIRECTORY}last.session.log"
 
 
-#logging to crash.log if something went wrong:
+## logging to crash.log if something went wrong:
 
 RESULT=$(grep -w 'script failed' $TEMPORARY)
 if [ "$RESULT" == "---script failed---" ] ; then
