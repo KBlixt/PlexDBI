@@ -14,6 +14,7 @@ import os
 class PlexDatabaseEditor:
 
     def __init__(self):
+
         start = time.time()
         try:
             self.sudo = 0 == os.getuid()
@@ -34,6 +35,7 @@ class PlexDatabaseEditor:
 
         self.key = config.get('SETTINGS', 'TMDB_API_KEY')
         self.library_section = config.get('SETTINGS', 'MOVIE_LIBRARY_SECTION')
+        self.check_library_section()
 
         movie_list = PlexDatabaseEditor.recent_releases(self)
         movie_list = movie_list + PlexDatabaseEditor.old_but_gold(self)
@@ -46,13 +48,23 @@ class PlexDatabaseEditor:
         print("script completed in " + str(int(end - start)) + " seconds.")
         print("---script was completed---")
 
-    def print_library_list(self):
-        for library in self.cursor.execute("SELECT id, name "
-                                           "FROM library_sections "
-                                           "WHERE language IS NOT 'xn' "
-                                           "AND section_type = 1 "
-                                           "ORDER BY id ASC "):
-            print(library[0] + ' have section id "' + library[1] + '.')
+    def check_library_section(self):
+        library_is_good = False
+        for library in self.cursor.execute("SELECT id "
+                            "FROM library_sections "
+                            "WHERE language IS NOT 'xn' "
+                            "AND section_type = 1 "
+                            "ORDER BY id ASC "):
+            if library[0] == self.library_section:
+                library_is_good = True
+
+        if not library_is_good:
+            for library in self.cursor.execute("SELECT id, name "
+                                               "FROM library_sections "
+                                               "WHERE language IS NOT 'xn' "
+                                               "AND section_type = 1 "
+                                               "ORDER BY id ASC "):
+                print(library[0] + ' have section id "' + library[1] + '.')
 
 
     def get_reference_date(self, attempts_limit=5):
@@ -68,7 +80,6 @@ class PlexDatabaseEditor:
             print('Remember to fill in the MOVIE_LIBRARY_SECTION in the config file. ')
             print('Also make sure that the "PlexDatabase.db" syslink isn\'t broken. ')
             print('here is a list on viable libraries you have: ')
-            self.print_library_list
             print('----------------------------------------------------------------')
             print('Exiting')
 
