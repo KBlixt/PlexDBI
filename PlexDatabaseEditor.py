@@ -32,6 +32,11 @@ class PlexDatabaseEditor:
 
         self.db = sqlite3.connect('PlexDatabase.db')  # remember to change this back and remove API-key
         self.cursor = self.db.cursor()
+        if not os.path.isfile('config'):
+            os.system('touch ' + os.getcwd() + '/config')
+            os.system('echo "[SETTINGS]"')
+            os.system('echo "TMDB_API_KEY ="')
+            os.system('echo "MOVIE_LIBRARY_SECTION ="')
 
         self.key = config.get('SETTINGS', 'TMDB_API_KEY')
         self.library_section = config.get('SETTINGS', 'MOVIE_LIBRARY_SECTION')

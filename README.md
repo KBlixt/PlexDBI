@@ -47,6 +47,9 @@ if you don't have a key, leave it blank. if you don't know your library sections
 and the program will list which movies you can use this program on.
 
 at this point you can run it if you give it sudo privileges, it will set up the syslink for you.
+
+    sudo python3 PlexDatabaseEditor.py
+
 if you don't want to give it sudo privileges then make a symlink for the database using:
 
     ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db" PlexDatabase.db
