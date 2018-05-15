@@ -46,7 +46,7 @@ class PlexDatabaseEditor:
         end = time.time()
         self.db.close()
         print("script completed in " + str(int(end - start)) + " seconds.")
-        print("---script was completed---")
+        print("---End of script---")
 
     def check_library_section(self):
         library_is_good = False
