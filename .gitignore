@@ -3,4 +3,10 @@
 *.config
 *.conf
 crash.log
+sqlite3
+run.script
+venv
+requests
+__pycache__
+
 

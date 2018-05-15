@@ -23,7 +23,7 @@ class PlexDatabaseEditor:
             self.sudo = False
 
         config = configparser.ConfigParser()
-        config.read('PlexDatabaseEditor.config')
+        config.read('config')
         if self.sudo:
             if not os.path.isfile('PlexDatabase.db'):
                 os.system('ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/'

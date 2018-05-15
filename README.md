@@ -26,36 +26,44 @@ the following movies will appear:
 ----------
 INSTALLATION:
 
-download the PlexDatabaseEditor.py file, put it somewhere. 
-add a "PlexDatabaseEditor.config" file
+download the PlexDatabaseEditor.py file and put it somewhere. for example:
 
-with the following information in it:
+    git clone https://github.com/KBlixt/PlexDatabaseEditor.git /opt/PlexDatabaseEditor
+
+add a "config" into that folder with the following information in it:
 
     [SETTINGS]
-    TMDB_API_KEY = d2347c5b228e909370baa85a74702611
-    MOVIE_LIBRARY_SECTION = 1
+    TMDB_API_KEY = [your tmdb api key]
+    MOVIE_LIBRARY_SECTION = [library section]
 
-and run the script with sudo priveliges. it needs sudo priveligies to stop and start the plexmediaserver service. 
-if you feel uncumfortable with this then remove those lines of code in the script, just delete any line with the word 
-"plexmediaserver" in it. then make sure that you have the plex database in the folder named "PlexDatabase.db" 
-otherwise it will crash. no harm will be done but it won't work.
+copy it into:
 
-I'll probably fix so that it won't require sudo to run propperly some day.
+    nano /opt/PlexDatabaseEditor/config
+
+at this point you can run it if you give it sudo privileges. if you don't want to give it sudo privileges then make a
+symlink for the database using:
+
+      ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db" "/opt/PlexDatabaseEditor/PlexDatabase.db"
+
+then it's up to you if you wish to it to a crontab, personally i've got it scheduled once a day at 10:30 with sudo privileges.
+
+    30 10 * * * cd /opt/PlexDatabaseEditor/  && sudo /usr/bin/python3 /opt/PlexDatabaseEditor/PlexDatabaseEditor.py
+
+the good thing about running it with sudo privileges is that the plexmediaserver service is only stopped for a a second
+instead of 5-20 seconds. the downside is of course that a script made by some random stranger have root access on your
+hardware. but the script
+isn't impossible to get though if you're only looking for bad stuff.
 
 ----------
+FAIR WARNING:
 
 this script will edit the PlexMediaServer database directly! specifically, it will change "added_at" in the
 "metadata_items" table.
 
-  BACKUP YOUR DATABASES! just in case. though, so far I haven't managed to corrupted mine... yet. and I'm runnign this script every 10 minute just to see what will happen, I even axcidentally ran twice at the same time and as far as I'm aware nothing happend.
+BACKUP YOUR DATABASES! just in case. though, so far I haven't managed to corrupted mine... yet.
+
 ----------
-NOTES!!
 
-    very early stage script. currently these caveats and limitations exists:
-
-    -  a script that is calling this script should be setup and a cronjob should be added for maximum effect
-    -  BACKUP YOUR DATABASES! just in case. though, so far I haven't managed to corrupted mine... yet.
-    -  the database must be symlinked into the folder
 
 
 
