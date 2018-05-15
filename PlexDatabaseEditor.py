@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sqlite3
 from datetime import datetime
 from datetime import timedelta
@@ -15,6 +16,9 @@ if not os.path.isfile('PlexDatabase.db'):
     os.system('ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/'
               'Plug-in Support/Databases/com.plexapp.plugins.library.db" "'
               + os.getcwd() + '/PlexDatabase.db"')
+
+
+
 
 
 class PlexDatabaseEditor:
