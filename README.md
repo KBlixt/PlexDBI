@@ -28,15 +28,11 @@ INSTALLATION:
 
 download the PlexDatabaseEditor.py file and put it somewhere. for example:
 
-    cd /opt && git clone https://github.com/KBlixt/PlexDatabaseEditor.git
-
-claim ownership for the folder
-
-    sudo chmod -R user:user PlexDatabaseEditor && cd PlexDatabaseEditor
+    cd /opt && git clone https://github.com/KBlixt/PlexDatabaseEditor.git && cd PlexDatabaseEditor
 
 and then add a "config" file:
 
-    nano /opt/PlexDatabaseEditor/config
+    nano config
 
 and copy this into it:
 
@@ -47,7 +43,7 @@ and copy this into it:
 at this point you can run it if you give it sudo privileges, it will set up the syslink for you.
 if you don't want to give it sudo privileges then make a symlink for the database using:
 
-    ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db" "/opt/PlexDatabaseEditor/PlexDatabase.db"
+    ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db" PlexDatabase.db
 
 then it's up to you if you wish to it to a crontab, personally i've got it scheduled once a day at 10:30 with sudo privileges.
 
