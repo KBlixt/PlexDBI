@@ -59,6 +59,7 @@ class PlexDatabaseEditor:
         except Exception:
             print('Remember to fill in the MOVIE_LIBRARY_SECTION in the config file. ')
             print('Also make sure that the "PlexDatabase.db" syslink isn\'t broken. ')
+            print('Exiting. ')
 
             sys.exit()
         reference_date = ''
