@@ -35,7 +35,7 @@ class PlexDatabaseEditor:
             f = open("config", "w+")
             if self.sudo:
                 os.system("sudo chown --reference=" + os.getcwd() + "/PlexDatabaseEditor.py config")
-                os.system("sudo chmod 777 config")
+                os.system("sudo chmod 775 config")
             f.write('\n[SETTINGS]')
             f.write('\nTMDB_API_KEY = ')
             f.write('\nMOVIE_LIBRARY_SECTION =')
