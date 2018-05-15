@@ -17,9 +17,6 @@ if not os.path.isfile('PlexDatabase.db'):
               'Plug-in Support/Databases/com.plexapp.plugins.library.db" "'
               + os.getcwd() + '/PlexDatabase.db"')
 
-    print('ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/'
-              'Plug-in Support/Databases/com.plexapp.plugins.library.db" "'
-              + os.getcwd() + '/PlexDatabase.db"')
 
 
 
