@@ -33,9 +33,9 @@ class PlexDatabaseEditor:
 
         if not os.path.isfile('config'):
             f = open("config", "w+")
-            f.write('\n  [SETTINGS]')
-            f.write('\n  TMDB_API_KEY = ')
-            f.write('\n  MOVIE_LIBRARY_SECTION =')
+            f.write('\n[SETTINGS]')
+            f.write('\nTMDB_API_KEY = ')
+            f.write('\nMOVIE_LIBRARY_SECTION =')
             f.close()
 
         config = configparser.ConfigParser()
