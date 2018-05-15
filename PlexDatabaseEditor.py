@@ -99,7 +99,7 @@ class PlexDatabaseEditor:
                     continue
 
                 local_movie_list.append(movie_id)
-                print('Movie with id: ' + movie_id + ' was added to the queue')
+                print('Movie with id: ' + str(movie_id) + ' was added to the queue')
 
         if recent_releases_minimum-len(local_movie_list) > 0:
             for movieInfo in self.cursor.execute("SELECT id,title "  # ...but at least the last 3 movies
@@ -128,7 +128,7 @@ class PlexDatabaseEditor:
                     continue
 
                 local_movie_list.append(movie_id)
-                print('Movie with id: ' + movie_id + ' was added to the queue')
+                print('Movie with id: ' + str(movie_id) + ' was added to the queue')
 
         return local_movie_list
 
@@ -160,7 +160,7 @@ class PlexDatabaseEditor:
                 continue
 
             local_movie_list.append(movie_id)
-            print('Movie with id: ' + movie_id + ' was added to the queue')
+            print('Movie with id: ' + str(movie_id) + ' was added to the queue')
 
         return local_movie_list
 
@@ -235,7 +235,7 @@ class PlexDatabaseEditor:
 
             if selected_id >= 0:
                 local_movie_list.append(selected_id)
-                print('Movie with id: ' + selected_id + ' was added to the queue')
+                print('Movie with id: ' + str(selected_id) + ' was added to the queue')
 
         return local_movie_list
 
@@ -265,7 +265,7 @@ class PlexDatabaseEditor:
                 continue
 
             local_movie_list.append(movie_id)
-            print('Movie with id: ' + movie_id + ' was added to the queue')
+            print('Movie with id: ' + str(movie_id) + ' was added to the queue')
 
         return local_movie_list
 
