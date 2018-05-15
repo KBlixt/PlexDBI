@@ -1,6 +1,8 @@
 # PlexDatabaseEditor
 
-only tested on python3 on linux systems but could probably be ported to windows with some tinkering. the source code is identical and it runs on windows with python3.6. unsure about other systems, but in theory you should be able to get it working as long as the system can run python3 and sqlite.
+only tested on python3 on linux systems but could probably be ported to windows with some tinkering. the source code is
+identical and it runs on windows with python3.6. unsure about other systems, but in theory you should be able to get it
+working as long as the system can run python3 and sqlite.
 
 ----------
 
@@ -39,9 +41,10 @@ and then add a "config" file:
 and copy this into it: 
 
     [SETTINGS]
-    TMDB_API_KEY = your_tmdb_api_key
-    MOVIE_LIBRARY_SECTION = library_section
-REMEMBER! Insert your information in the config file!
+    TMDB_API_KEY =
+    MOVIE_LIBRARY_SECTION =
+if you don't have a key, leave it blank. if you don't know your library sections yest leave it blank as well
+and the program will list which movies you can use this program on.
 
 at this point you can run it if you give it sudo privileges, it will set up the syslink for you.
 if you don't want to give it sudo privileges then make a symlink for the database using:
