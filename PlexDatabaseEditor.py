@@ -48,14 +48,17 @@ class PlexDatabaseEditor:
         print("---script was completed---")
 
     def get_reference_date(self, attempts_limit=5):
-        self.cursor.execute("SELECT originally_available_at "  # most recent movie for reference
-                            "FROM metadata_items "
-                            "WHERE library_section_id = ? "
-                            "AND metadata_type = 1 "
-                            "AND duration > 1 "
-                            "ORDER BY originally_available_at DESC "
-                            "LIMIT ?", (self.library_section, attempts_limit,))
-
+        try:
+            self.cursor.execute("SELECT originally_available_at "  # most recent movie for reference
+                                "FROM metadata_items "
+                                "WHERE library_section_id = [library section] "
+                                "AND metadata_type = 1 "
+                                "AND duration > 1 "
+                                "ORDER BY originally_available_at DESC "
+                                "LIMIT ?", (self.library_section, attempts_limit,))
+        except Exception:
+            print('Remember to fill in the MOVIE_LIBRARY_SECTION in the config file. And add the plex database')
+            sys.exit()
         reference_date = ''
         attempt_number = 0
         for attempt in self.cursor.fetchall():
