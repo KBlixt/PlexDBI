@@ -79,7 +79,8 @@ class PlexDatabaseEditor:
                                                  "AND duration > 1 "
                                                  "AND originally_available_at > ? "
                                                  "ORDER BY originally_available_at DESC "
-                                                 "LIMIT ?", (self.library_section, reference_date.isoformat().replace('T', ' '),
+                                                 "LIMIT ?", (self.library_section,
+                                                             reference_date.isoformat().replace('T', ' '),
                                                              recent_releases_limit)):
 
                 movie_id = movieInfo[0]
@@ -106,7 +107,8 @@ class PlexDatabaseEditor:
                                                  "AND duration > 1 "
                                                  "AND originally_available_at < ? "
                                                  "ORDER BY originally_available_at DESC "
-                                                 "LIMIT ?", (self.library_section, reference_date.isoformat().replace('T', ' '),
+                                                 "LIMIT ?", (self.library_section,
+                                                             reference_date.isoformat().replace('T', ' '),
                                                              recent_releases_minimum - len(local_movie_list),)):
 
                 movie_id = movieInfo[0]
@@ -137,7 +139,8 @@ class PlexDatabaseEditor:
                                               "AND rating > 8 "
                                               "AND library_section_id = ? "
                                               "ORDER BY RANDOM() "
-                                              "LIMIT ?", (datetime.now() + timedelta(days=+3652), self.library_section, count,)):
+                                              "LIMIT ?", (datetime.now() + timedelta(days=+3652),
+                                                          self.library_section, count,)):
 
             movie_id = movie_info[0]
             title = str(movie_info[1])
@@ -171,7 +174,7 @@ class PlexDatabaseEditor:
                                                   "AND library_section_id = ? "
                                                   "AND rating > 1 "
                                                   "ORDER BY RANDOM() "
-                                                  "LIMIT 8", (self.library_section)):
+                                                  "LIMIT 8", (self.library_section, )):
                 movie_id = movie_info[0]
                 title = str(movie_info[1])
                 year = str(movie_info[2])
