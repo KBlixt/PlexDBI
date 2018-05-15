@@ -16,9 +16,9 @@ fi
 
 TEMPORARY="/tmp/PlexDatabaseEditor.out.tmp"
 #running script
-sudo service plexmediaserver stop
+service plexmediaserver stop
 /usr/bin/python3 ${PATH_TO_SCRIPT_DIRECTORY}PlexDatabaseEditor.py > $TEMPORARY
-sudo service plexmediaserver start
+service plexmediaserver start
 cat $TEMPORARY > "${PATH_TO_SCRIPT_DIRECTORY}last.session.log"
 
 
