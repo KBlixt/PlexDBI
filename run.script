@@ -21,15 +21,15 @@ if [ "$RESULT" == "---script was completed---" ] ; then
 	echo "success"
 else
 	echo "fail"
-	cat $TEMPORARY > "${PATH_TO_SCRIPT}crach.log"
-	echo "[`date`] -------------------------------------------------------------------" >> "${PATH_TO_SCRIPT}crach.log"	
+	cat $TEMPORARY > "${PATH_TO_SCRIPT}crash.log"
+	echo "[`date`] -------------------------------------------------------------------" >> "${PATH_TO_SCRIPT}crash.log"	
 fi
 
 RESULT=$(grep -w 'script failed' $TEMPORARY)
 if [ "$RESULT" == "---script failed---" ] ; then
 	echo "fail"
-	cat $TEMPORARY > "${PATH_TO_SCRIPT}crach.log"
-	echo "[`date`] -------------------------------------------------------------------" >> "${PATH_TO_SCRIPT}crach.log"
+	cat $TEMPORARY > "${PATH_TO_SCRIPT}crash.log"
+	echo "[`date`] -------------------------------------------------------------------" >> "${PATH_TO_SCRIPT}crash.log"
 else
 	echo "success"
 	

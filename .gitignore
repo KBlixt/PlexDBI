@@ -2,4 +2,5 @@
 *.db*
 *.config
 *.conf
+crash.log
 
