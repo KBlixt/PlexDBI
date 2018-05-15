@@ -55,7 +55,7 @@ class PlexDatabaseEditor:
                                            "WHERE language IS NOT 'xn' "
                                            "AND section_type = 1 "
                                            "ORDER BY id ASC "):
-            if library[0] == self.library_section:
+            if str(library[0]) == self.library_section:
                 library_is_good = True
 
         if not library_is_good:
