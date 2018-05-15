@@ -1,0 +1,38 @@
+#!/bin/bash
+
+
+TEMPORARY="/tmp/PlexDatabaseEditor.out.tmp"
+PATH_TO_SCRIPT="$1"
+
+#sanity check
+if [ -z "$1" ] ; then
+	echo "No Path to the script was provided, exiting."
+	exit 1
+fi
+
+#running script
+sudo service plexmediaserver stop
+sudo /usr/bin/python2.7 ${PATH_TO_SCRIPT}PlexDatabaseEditor27.py > $TEMPORARY
+sudo service plexmediaserver start
+
+#reporting:
+RESULT=$(grep -w 'script was completed' $TEMPORARY)
+if [ "$RESULT" == "---script was completed---" ] ; then
+	echo "success"
+else
+	echo "fail"
+	cat $TEMPORARY > "${PATH_TO_SCRIPT}crach.log"
+	echo "[`date`] -------------------------------------------------------------------" >> "${PATH_TO_SCRIPT}crach.log"	
+fi
+
+RESULT=$(grep -w 'script failed' $TEMPORARY)
+if [ "$RESULT" == "---script failed---" ] ; then
+	echo "fail"
+	cat $TEMPORARY > "${PATH_TO_SCRIPT}crach.log"
+	echo "[`date`] -------------------------------------------------------------------" >> "${PATH_TO_SCRIPT}crach.log"
+else
+	echo "success"
+	
+fi
+
+exit 1
