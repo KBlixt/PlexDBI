@@ -23,6 +23,7 @@ class PlexDatabaseEditor:
         self.cursor = self.db.cursor()
 
         self.key = config.get('TMDB', 'API_KEY')
+
         movie_list = PlexDatabaseEditor.recent_releases(self)
         movie_list = movie_list + PlexDatabaseEditor.old_but_gold(self)
         movie_list = movie_list + PlexDatabaseEditor.hidden_gem(self)
