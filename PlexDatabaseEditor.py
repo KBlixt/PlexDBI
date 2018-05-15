@@ -57,7 +57,9 @@ class PlexDatabaseEditor:
                                 "ORDER BY originally_available_at DESC "
                                 "LIMIT ?", (self.library_section, attempts_limit,))
         except Exception:
-            print('Remember to fill in the MOVIE_LIBRARY_SECTION in the config file. And add the plex database')
+            print('Remember to fill in the MOVIE_LIBRARY_SECTION in the config file. ')
+            print('Also make sure that the "PlexDatabase.db" syslink isn\'t broken. ')
+
             sys.exit()
         reference_date = ''
         attempt_number = 0
