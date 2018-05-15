@@ -16,14 +16,19 @@ class PlexDatabaseEditor:
 
     def __init__(self):
         start = time.time()
+        try:
+            self.sudo = '0' == os.getuid()
+        except AttributeError as e:
+            print(e.args)
+            self.sudo = False
 
         config = configparser.ConfigParser()
         config.read('PlexDatabaseEditor.config')
-
-        if not os.path.isfile('PlexDatabase.db'):
-            os.system('ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/'
-                      'Plug-in Support/Databases/com.plexapp.plugins.library.db" "'
-                      + os.getcwd() + '/PlexDatabase.db"')
+        if self.sudo:
+            if not os.path.isfile('PlexDatabase.db'):
+                os.system('ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/'
+                          'Plug-in Support/Databases/com.plexapp.plugins.library.db" "'
+                          + os.getcwd() + '/PlexDatabase.db"')
 
         self.db = sqlite3.connect('PlexDatabase.db')  # remember to change this back and remove API-key
         self.cursor = self.db.cursor()
@@ -270,7 +275,10 @@ class PlexDatabaseEditor:
         return local_movie_list
 
     def commit(self, id_list):
-        os.system("sudo service plexmediaserver stop")
+        if self.sudo:
+            print('Stopping plexmediaserver:')
+            os.system("sudo service plexmediaserver stop")
+
         pos = 0
         timestamp = datetime.now().replace(microsecond=0) + timedelta(days=+1)
         for movie in id_list:
@@ -279,7 +287,10 @@ class PlexDatabaseEditor:
                                 "SET added_at = ?"
                                 "WHERE id = ?", (now.isoformat().replace('T', ' '), movie,))
             pos += 1
-            self.db.commit()
+        self.db.commit()
+
+        if self.sudo:
+            print('Starting plexmediaserver:')
             os.system("sudo service plexmediaserver start")
 
     @staticmethod

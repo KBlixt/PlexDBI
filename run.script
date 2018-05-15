@@ -1,8 +1,8 @@
 #!/bin/bash
 
 
-TEMPORARY="/tmp/PlexDatabaseEditor.out.tmp"
-PATH_TO_SCRIPT="$1"
+#
+PATH_TO_SCRIPT_DIRECTORY="$1"
 
 #sanity check
 if [ -z "$1" ] ; then
@@ -10,33 +10,22 @@ if [ -z "$1" ] ; then
 	exit 1
 fi
 
+
+TEMPORARY="/tmp/PlexDatabaseEditor.out.tmp"
 #running script
 sudo service plexmediaserver stop
-sudo /usr/bin/python3 ${PATH_TO_SCRIPT}PlexDatabaseEditor.py > $TEMPORARY
+sudo /usr/bin/python3 ${PATH_TO_SCRIPT_DIRECTORY}PlexDatabaseEditor.py > $TEMPORARY
 sudo service plexmediaserver start
+cat $TEMPORARY > "${PATH_TO_SCRIPT_DIRECTORY}last.session.log"
 
-#reporting:
+
+#logging to crash.log if something went wrong:
 
 RESULT=$(grep -w 'script failed' $TEMPORARY)
 if [ "$RESULT" == "---script failed---" ] ; then
 	echo "fail"
-	cat $TEMPORARY > "${PATH_TO_SCRIPT}crash.log"
-	echo "[`date`] -------------------------------------------------------------------" >> "${PATH_TO_SCRIPT}crash.log"
-	exit 1
-else
-	echo "success"
-
+	cat $TEMPORARY > "${PATH_TO_SCRIPT_DIRECTORY}crash.log"
+	echo "[`date`] ----------------------------" >> "${PATH_TO_SCRIPT_DIRECTORY}crash.log"
 fi
-
-RESULT=$(grep -w 'script was completed' $TEMPORARY)
-if [ "$RESULT" == "---script was completed---" ] ; then
-	echo "success"
-else
-	echo "fail"
-	cat $TEMPORARY > "${PATH_TO_SCRIPT}crash.log"
-	echo "[`date`] -------------------------------------------------------------------" >> "${PATH_TO_SCRIPT}crash.log"	
-fi
-
-
 
 exit 1
