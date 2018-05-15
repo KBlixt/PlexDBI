@@ -34,11 +34,12 @@ and then add a "config" file:
 
     nano config
 
-and copy this into it: REMEMBER! Insert your information in the config file!
+and copy this into it: 
 
     [SETTINGS]
     TMDB_API_KEY = [your tmdb api key]
     MOVIE_LIBRARY_SECTION = [library section]
+REMEMBER! Insert your information in the config file!
 
 at this point you can run it if you give it sudo privileges, it will set up the syslink for you.
 if you don't want to give it sudo privileges then make a symlink for the database using:
