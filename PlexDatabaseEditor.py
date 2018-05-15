@@ -260,8 +260,9 @@ class PlexDatabaseEditor:
 
                 except urllib.error.HTTPError as e:
                     print("---script failed---")
-                    print("TMDB api failed, skipping one movie from the category 'Hidden Gems' see error:")
-                    print("URL requested:" + e.geturl())
+                    print("TMDB api failed, skipping one movie from the category 'Hidden Gems' see error: ")
+                    print("URL requested: " + e.geturl())
+                    print("Reason: " + e.reason)
                     continue
 
                 if data['total_results'] > 0:
