@@ -35,7 +35,7 @@ download the PlexDatabaseEditor.py file and put it somewhere. for example:
     cd /opt && git clone https://github.com/KBlixt/PlexDatabaseEditor.git && cd PlexDatabaseEditor
 
 at this point you can run it if you give it sudo privileges, it will set up the syslink and the config file for you.
-but you'll still have to configure the config file. but if you just run the script it will tell you what's wrong
+but you'll still have to configure the config file. but just run the script and it will tell you what's wrong
 and how to fix it.
 
     sudo python3 PlexDatabaseEditor.py
