@@ -8,5 +8,6 @@ run.script
 venv
 requests
 __pycache__
+config
 
 
