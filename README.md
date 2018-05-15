@@ -1,6 +1,6 @@
 # PlexDatabaseEditor
 
-a small script that is intended to manipulate Plex's homescreen table "Recently added movies" it can also use tmdb api
+a small script that is intended to manipulate Plex's homescreen table "Recently added movies" it can also use the tmdb-api
 if the user have an api key. otherwise that'll be ignored.
 ----------
 whenever this script is run the Recently added movie table will be "refreshed" and from right to left
