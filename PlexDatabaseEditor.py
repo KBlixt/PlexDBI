@@ -34,9 +34,7 @@ class PlexDatabaseEditor:
         if not os.path.isfile('config'):
             f = open("config", "w+")
             if self.sudo:
-
                 os.system("sudo chmod 777 config")
-            else:
             f.write('\n[SETTINGS]')
             f.write('\nTMDB_API_KEY = ')
             f.write('\nMOVIE_LIBRARY_SECTION =')
@@ -85,7 +83,6 @@ class PlexDatabaseEditor:
 
                 print('The library "' + library[1] + '" have section_id: ' + str(library[0]) + '.')
                 sys.exit()
-
 
     def get_reference_date(self, attempts_limit=5):
         try:
