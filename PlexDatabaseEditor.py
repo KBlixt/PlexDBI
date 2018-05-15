@@ -51,10 +51,10 @@ class PlexDatabaseEditor:
     def check_library_section(self):
         library_is_good = False
         for library in self.cursor.execute("SELECT id "
-                            "FROM library_sections "
-                            "WHERE language IS NOT 'xn' "
-                            "AND section_type = 1 "
-                            "ORDER BY id ASC "):
+                                           "FROM library_sections "
+                                           "WHERE language IS NOT 'xn' "
+                                           "AND section_type = 1 "
+                                           "ORDER BY id ASC "):
             if library[0] == self.library_section:
                 library_is_good = True
 
@@ -64,7 +64,8 @@ class PlexDatabaseEditor:
                                                "WHERE language IS NOT 'xn' "
                                                "AND section_type = 1 "
                                                "ORDER BY id ASC "):
-                print(library[0] + ' have section id "' + library[1] + '.')
+                print('The library "' + library[1] + '" have section_id: ' + str(library[0]) + '.')
+                sys.exit()
 
 
     def get_reference_date(self, attempts_limit=5):
