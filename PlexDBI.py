@@ -65,8 +65,9 @@ class PlexDBI:
 
         end = time.time()
         self.db.close()
-        print("script completed in " + str(int(end - start)) + " seconds.")
+
         print("----End of script----")
+        print("Script completed in " + str(int(end - start)) + " seconds.")
 
     def check_library_section(self):
         library_is_good = False
@@ -157,7 +158,7 @@ class PlexDBI:
                     continue
 
                 local_movie_list.append(movie_id)
-                print('Adding to movie queue. movie:  "' + title + '"')
+                print('Adding item to movie queue. Title:  "' + title + '"')
 
         if recent_releases_minimum-len(local_movie_list) > 0:
             for movieInfo in self.cursor.execute("SELECT id,title "  # ...but at least the last 3 movies
@@ -186,7 +187,7 @@ class PlexDBI:
                     continue
 
                 local_movie_list.append(movie_id)
-                print('Adding to movie queue. movie:  "' + title + '"')
+                print('Adding item to movie queue. Title:  "' + title + '"')
 
         return local_movie_list
 
@@ -218,7 +219,7 @@ class PlexDBI:
                 continue
 
             local_movie_list.append(movie_id)
-            print('Adding to movie queue. movie:  "' + title + '"')
+            print('Adding item to movie queue. Title:  "' + title + '"')
 
         return local_movie_list
 
@@ -296,7 +297,7 @@ class PlexDBI:
 
             if selected_id >= 0:
                 local_movie_list.append(selected_id)
-                print('Adding to movie queue. movie:  "' + selected_title.replace('+', ' ') + '"')
+                print('Adding item to movie queue. Title:  "' + selected_title.replace('+', ' ') + '"')
 
         return local_movie_list
 
@@ -326,7 +327,7 @@ class PlexDBI:
                 continue
 
             local_movie_list.append(movie_id)
-            print('Adding to movie queue. movie:  "' + title + '"')
+            print('Adding item to movie queue. Title:  "' + title + '"')
 
         return local_movie_list
 
