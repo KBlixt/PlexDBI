@@ -157,7 +157,7 @@ class PlexDBI:
                     continue
 
                 local_movie_list.append(movie_id)
-                print('Movie with id: ' + str(movie_id) + ' was added to the queue')
+                print('The movie "' + title + '" was added to the queue.')
 
         if recent_releases_minimum-len(local_movie_list) > 0:
             for movieInfo in self.cursor.execute("SELECT id,title "  # ...but at least the last 3 movies
@@ -186,7 +186,7 @@ class PlexDBI:
                     continue
 
                 local_movie_list.append(movie_id)
-                print('Movie with id: ' + str(movie_id) + ' was added to the queue')
+                print('The movie "' + title + '" was added to the queue.')
 
         return local_movie_list
 
@@ -218,7 +218,7 @@ class PlexDBI:
                 continue
 
             local_movie_list.append(movie_id)
-            print('Movie with id: ' + str(movie_id) + ' was added to the queue')
+            print('The movie "' + title + '" was added to the queue.')
 
         return local_movie_list
 
@@ -227,6 +227,7 @@ class PlexDBI:
 
         lowest_popularity = 100000.0
         selected_id = -1
+        selected_title = ''
         for i in range(count):
 
             for movie_info in self.cursor.execute("SELECT id,title,year,rating "  # Potential hidden gem
@@ -291,10 +292,11 @@ class PlexDBI:
                     if lowest_popularity > compensated_pop:
                         lowest_popularity = compensated_pop
                         selected_id = movie_id
+                        selected_title = title
 
             if selected_id >= 0:
                 local_movie_list.append(selected_id)
-                print('Movie with id: ' + str(selected_id) + ' was added to the queue')
+                print('The movie "' + selected_title + '" was added to the queue.')
 
         return local_movie_list
 
@@ -324,7 +326,7 @@ class PlexDBI:
                 continue
 
             local_movie_list.append(movie_id)
-            print('Movie with id: ' + str(movie_id) + ' was added to the queue')
+            print('The movie "' + title + '" was added to the queue.')
 
         return local_movie_list
 
