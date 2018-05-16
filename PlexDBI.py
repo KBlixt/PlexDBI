@@ -13,8 +13,7 @@ try:
 except ImportError:
     print('Unable to import one or more modules.')
     print('Make sure that you are running the script with an updated python 3.')
-    print('Exiting')
-
+    print('Exiting.')
     sys.exit()
 
 
@@ -42,6 +41,7 @@ class PlexDBI:
             f = open("config", "w+")
             if self.sudo:
                 os.system("sudo chown --reference=" + os.getcwd() + "/PlexDBI.py config")
+            f.write('# If you are unsure about any of the settings just leave them blank')
             f.write('\n[REQUIRED]')
             f.write('\nMOVIE_LIBRARY_SECTION =')
             f.write('\n[OPTIONAL]')
