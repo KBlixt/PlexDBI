@@ -124,7 +124,7 @@ class PlexDBI:
                       + (self.line_number() + 2) + ".")
                 sys.exit()
 
-        reference_date = datetime.strptime(reference_date, '%Y-%m-%d %H:%M:%S') + timedelta(days=-14)
+        reference_date = datetime.strptime(reference_date, '%Y-%m-%d %H:%M:%S') + timedelta(days=-114)
 
         return reference_date
 
