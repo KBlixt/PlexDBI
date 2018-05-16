@@ -157,7 +157,7 @@ class PlexDBI:
                     continue
 
                 local_movie_list.append(movie_id)
-                print('Adding to movie queue. movie:"' + title + '"')
+                print('Adding to movie queue. movie:"  ' + title + '"')
 
         if recent_releases_minimum-len(local_movie_list) > 0:
             for movieInfo in self.cursor.execute("SELECT id,title "  # ...but at least the last 3 movies
@@ -186,7 +186,7 @@ class PlexDBI:
                     continue
 
                 local_movie_list.append(movie_id)
-                print('Adding to movie queue. movie:"' + title + '"')
+                print('Adding to movie queue. movie:"  ' + title + '"')
 
         return local_movie_list
 
@@ -218,7 +218,7 @@ class PlexDBI:
                 continue
 
             local_movie_list.append(movie_id)
-            print('Adding to movie queue. movie:"' + title + '"')
+            print('Adding to movie queue. movie:"  ' + title + '"')
 
         return local_movie_list
 
@@ -296,7 +296,7 @@ class PlexDBI:
 
             if selected_id >= 0:
                 local_movie_list.append(selected_id)
-                print('Adding to movie queue. movie:"' + selected_title + '"')
+                print('Adding to movie queue. movie:"  ' + selected_title + '"')
 
         return local_movie_list
 
@@ -326,17 +326,17 @@ class PlexDBI:
                 continue
 
             local_movie_list.append(movie_id)
-            print('Adding to movie queue. movie:"' + title + '"')
+            print('Adding to movie queue. movie:"  ' + title + '"')
 
         return local_movie_list
 
     def commit(self, id_list):
         if self.sudo:
-            print('Stopping plexmediaserver:...')
+            print('-Stopping plexmediaserver:...')
             os.system("sudo service plexmediaserver stop")
 
         pos = 0
-        print('Processing movie queue...')
+        print('--Processing movie queue...')
         timestamp = datetime.now().replace(microsecond=0) + timedelta(days=+1)
         for movie in id_list:
             now = timestamp + timedelta(seconds=-pos)
@@ -344,11 +344,11 @@ class PlexDBI:
                                 "SET added_at = ?"
                                 "WHERE id = ?", (now.isoformat().replace('T', ' '), movie,))
             pos += 1
-        print('Movie queue processed, committing to db.')
+        print('--Movie queue processed, committing to db.')
         self.db.commit()
-        print('changes committed.')
+        print('--changes committed.')
         if self.sudo:
-            print('Starting plexmediaserver...')
+            print('-Starting plexmediaserver...')
             os.system("sudo service plexmediaserver start")
         else:
             print('you can now proceed to restart your Plex server')
