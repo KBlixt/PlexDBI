@@ -157,7 +157,7 @@ class PlexDBI:
                     continue
 
                 local_movie_list.append(movie_id)
-                print('"' + title + '" was added to the movie queue.')
+                print('Adding to movie queue. movie:"' + title + '"')
 
         if recent_releases_minimum-len(local_movie_list) > 0:
             for movieInfo in self.cursor.execute("SELECT id,title "  # ...but at least the last 3 movies
@@ -186,7 +186,7 @@ class PlexDBI:
                     continue
 
                 local_movie_list.append(movie_id)
-                print('"' + title + '" was added to the movie queue.')
+                print('Adding to movie queue. movie:"' + title + '"')
 
         return local_movie_list
 
@@ -218,7 +218,7 @@ class PlexDBI:
                 continue
 
             local_movie_list.append(movie_id)
-            print('"' + title + '" was added to the movie queue.')
+            print('Adding to movie queue. movie:"' + title + '"')
 
         return local_movie_list
 
@@ -296,7 +296,7 @@ class PlexDBI:
 
             if selected_id >= 0:
                 local_movie_list.append(selected_id)
-                print('"' + selected_title + '" was added to the movie queue.')
+                print('Adding to movie queue. movie:"' + selected_title + '"')
 
         return local_movie_list
 
@@ -326,7 +326,7 @@ class PlexDBI:
                 continue
 
             local_movie_list.append(movie_id)
-            print('"' + title + '" was added to the movie queue.')
+            print('Adding to movie queue. movie:"' + title + '"')
 
         return local_movie_list
 
