@@ -124,7 +124,7 @@ class PlexDBI:
                       + (self.line_number() + 2) + ".")
                 sys.exit()
 
-        reference_date = datetime.strptime(reference_date, '%Y-%m-%d %H:%M:%S') + timedelta(days=-114)
+        reference_date = datetime.strptime(reference_date, '%Y-%m-%d %H:%M:%S') + timedelta(days=-14)
 
         return reference_date
 
@@ -135,6 +135,7 @@ class PlexDBI:
             for movieInfo in self.cursor.execute("SELECT id,title "  # modifies 7 movies within 14 days...
                                                  "FROM metadata_items "
                                                  "WHERE library_section_id = ? "
+                                                 "AND metadata_type = 1 "
                                                  "AND duration > 1 "
                                                  "AND originally_available_at > ? "
                                                  "ORDER BY originally_available_at DESC "
@@ -164,6 +165,7 @@ class PlexDBI:
             for movieInfo in self.cursor.execute("SELECT id,title "  # ...but at least the last 3 movies
                                                  "FROM metadata_items "
                                                  "WHERE library_section_id = ? "
+                                                 "AND metadata_type = 1 "
                                                  "AND duration > 1 "
                                                  "AND originally_available_at < ? "
                                                  "ORDER BY originally_available_at DESC "
@@ -199,6 +201,7 @@ class PlexDBI:
                                               "AND originally_available_at < ? "
                                               "AND rating > 8 "
                                               "AND library_section_id = ? "
+                                              "AND metadata_type = 1 "
                                               "ORDER BY RANDOM() "
                                               "LIMIT ?", (datetime.now() + timedelta(days=+3652),
                                                           self.library_section, count,)):
@@ -235,6 +238,7 @@ class PlexDBI:
                                                   "FROM metadata_items "
                                                   "WHERE id IN (SELECT id FROM metadata_items ORDER BY RANDOM()) "
                                                   "AND library_section_id = ? "
+                                                  "AND metadata_type = 1 "
                                                   "AND rating > 1 "
                                                   "ORDER BY RANDOM() "
                                                   "LIMIT 8", (self.library_section, )):
@@ -259,11 +263,6 @@ class PlexDBI:
                 if year == 'None':
                     print("----Script failed----")
                     print("No year were found for the movie \"" + title + "\" and it was skipped.")
-                    print("Not a critical error and can be ignored unless it's a common occurrence.")
-                    continue
-                if rating == 'None':
-                    print("----Script failed----")
-                    print("No rating were found for the \"" + title + "\" and it was skipped.")
                     print("Not a critical error and can be ignored unless it's a common occurrence.")
                     continue
 
@@ -308,6 +307,7 @@ class PlexDBI:
                                        "FROM metadata_items "
                                        "WHERE id IN (SELECT id FROM metadata_items ORDER BY RANDOM()) "
                                        "AND library_section_id = ? "
+                                       "AND metadata_type = 1 "
                                        "ORDER BY RANDOM() "
                                        "LIMIT ?", (self.library_section, count,)):
 
