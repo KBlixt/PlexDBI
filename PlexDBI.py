@@ -1,4 +1,5 @@
 try:
+    import sys
     import sqlite3
     from datetime import datetime
     from datetime import timedelta
@@ -7,7 +8,6 @@ try:
     import urllib.error
     import configparser
     import inspect
-    import sys
     import time
     import os
 except ImportError:
