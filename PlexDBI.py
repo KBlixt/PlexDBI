@@ -333,7 +333,7 @@ class PlexDBI:
 
     def commit(self, id_list):
         if self.sudo:
-            print('--Stopping plexmediaserver:.')
+            print('--Stopping plexmediaserver.')
             os.system("sudo service plexmediaserver stop")
 
         pos = 0
