@@ -1,14 +1,21 @@
-import sqlite3
-from datetime import datetime
-from datetime import timedelta
-import json
-import urllib.request
-import urllib.error
-import configparser
-import inspect
-import sys
-import time
-import os
+try:
+    import sqlite3
+    from datetime import datetime
+    from datetime import timedelta
+    import json
+    import urllib.request
+    import urllib.error
+    import configparser
+    import inspect
+    import sys
+    import time
+    import os
+except ImportError:
+    print('Unable to import one or more modules.')
+    print('Make sure that you are running the script with an updated python 3.')
+    print('Exiting')
+
+    sys.exit()
 
 
 class PlexDBI:
@@ -337,12 +344,12 @@ class PlexDBI:
             pos += 1
         print('Movie list processed, committing to db.')
         self.db.commit()
-        print('changes comitted.')
+        print('changes committed.')
         if self.sudo:
             print('Starting plexmediaserver...')
             os.system("sudo service plexmediaserver start")
         else:
-            print('you can now proceed to restart your plex server')
+            print('you can now proceed to restart your Plex server')
 
     @staticmethod
     def line_number():
