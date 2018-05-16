@@ -157,7 +157,7 @@ class PlexDBI:
                     continue
 
                 local_movie_list.append(movie_id)
-                print('The movie "' + title + '" was added to the queue.')
+                print('"' + title + '" was added to the movie queue.')
 
         if recent_releases_minimum-len(local_movie_list) > 0:
             for movieInfo in self.cursor.execute("SELECT id,title "  # ...but at least the last 3 movies
@@ -186,7 +186,7 @@ class PlexDBI:
                     continue
 
                 local_movie_list.append(movie_id)
-                print('The movie "' + title + '" was added to the queue.')
+                print('"' + title + '" was added to the movie queue.')
 
         return local_movie_list
 
@@ -218,7 +218,7 @@ class PlexDBI:
                 continue
 
             local_movie_list.append(movie_id)
-            print('The movie "' + title + '" was added to the queue.')
+            print('"' + title + '" was added to the movie queue.')
 
         return local_movie_list
 
@@ -296,7 +296,7 @@ class PlexDBI:
 
             if selected_id >= 0:
                 local_movie_list.append(selected_id)
-                print('The movie "' + selected_title + '" was added to the queue.')
+                print('"' + selected_title + '" was added to the movie queue.')
 
         return local_movie_list
 
@@ -326,7 +326,7 @@ class PlexDBI:
                 continue
 
             local_movie_list.append(movie_id)
-            print('The movie "' + title + '" was added to the queue.')
+            print('"' + title + '" was added to the movie queue.')
 
         return local_movie_list
 
@@ -336,7 +336,7 @@ class PlexDBI:
             os.system("sudo service plexmediaserver stop")
 
         pos = 0
-        print('Processing movie list...')
+        print('Processing movie queue...')
         timestamp = datetime.now().replace(microsecond=0) + timedelta(days=+1)
         for movie in id_list:
             now = timestamp + timedelta(seconds=-pos)
@@ -344,7 +344,7 @@ class PlexDBI:
                                 "SET added_at = ?"
                                 "WHERE id = ?", (now.isoformat().replace('T', ' '), movie,))
             pos += 1
-        print('Movie list processed, committing to db.')
+        print('Movie queue processed, committing to db.')
         self.db.commit()
         print('changes committed.')
         if self.sudo:
