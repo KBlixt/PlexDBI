@@ -66,7 +66,7 @@ class PlexDBI:
         end = time.time()
         self.db.close()
         print("script completed in " + str(int(end - start)) + " seconds.")
-        print("---End of script---")
+        print("----End of script----")
 
     def check_library_section(self):
         library_is_good = False
@@ -118,7 +118,7 @@ class PlexDBI:
             if reference_date != 'None':
                 break
             if attempt_number == attempts_limit:
-                print("---script failed---")
+                print("----Script failed----")
                 print("Failed finding a reference date. exiting on line: "
                       + (self.line_number() + 2) + ".")
                 sys.exit()
@@ -145,19 +145,19 @@ class PlexDBI:
                 title = str(movieInfo[1])
 
                 if title == 'None':
-                    print("---script failed---")
+                    print("----Script failed----")
                     print("No title were found for a movie and it was skipped.")
                     print("Not a critical error and can be ignored unless it's a common occurrence.")
                     print("movie_id: " + movie_id)
                     continue
                 if movie_id == 'None':
-                    print("---script failed---")
+                    print("----Script failed----")
                     print("No id were found for a movie and it was skipped.")
                     print("Not a critical error and can be ignored unless it's a common occurrence.")
                     continue
 
                 local_movie_list.append(movie_id)
-                print('Adding to movie queue. movie:"  ' + title + '"')
+                print('Adding to movie queue. movie:  "' + title + '"')
 
         if recent_releases_minimum-len(local_movie_list) > 0:
             for movieInfo in self.cursor.execute("SELECT id,title "  # ...but at least the last 3 movies
@@ -174,19 +174,19 @@ class PlexDBI:
                 title = str(movieInfo[1])
 
                 if title == 'None':
-                    print("---script failed---")
+                    print("----Script failed----")
                     print("No title were found for a movie and it was skipped.")
                     print("Not a critical error and can be ignored unless it's a common occurrence.")
                     print("movie_id: " + movie_id)
                     continue
                 if movie_id == 'None':
-                    print("---script failed---")
+                    print("----Script failed----")
                     print("No id were found for a movie and it was skipped.")
                     print("Not a critical error and can be ignored unless it's a common occurrence.")
                     continue
 
                 local_movie_list.append(movie_id)
-                print('Adding to movie queue. movie:"  ' + title + '"')
+                print('Adding to movie queue. movie:  "' + title + '"')
 
         return local_movie_list
 
@@ -206,19 +206,19 @@ class PlexDBI:
             title = str(movie_info[1])
 
             if title == 'None':
-                print("---script failed---")
+                print("----Script failed----")
                 print("No title were found for a movie and it was skipped.")
                 print("Not a critical error and can be ignored unless it's a common occurrence.")
                 print("movieId: " + movie_id)
                 continue
             if movie_id == 'None':
-                print("---script failed---")
+                print("----Script failed----")
                 print("No id were found for a movie and it was skipped.")
                 print("Not a critical error and can be ignored unless it's a common occurrence.")
                 continue
 
             local_movie_list.append(movie_id)
-            print('Adding to movie queue. movie:"  ' + title + '"')
+            print('Adding to movie queue. movie:  "' + title + '"')
 
         return local_movie_list
 
@@ -243,7 +243,7 @@ class PlexDBI:
                 rating = movie_info[3]
 
                 if title == 'None':
-                    print("---script failed---")
+                    print("----Script failed----")
                     print("No title were found for a movie and it was skipped.")
                     print("Not a critical error and can be ignored unless it's a common occurrence.")
                     print("movie_id: " + movie_id)
@@ -251,17 +251,17 @@ class PlexDBI:
                     print("rating: " + rating)
                     continue
                 if movie_id == 'None':
-                    print("---script failed---")
+                    print("----Script failed----")
                     print("No id were found for the movie \"" + title + "\" and it was skipped.")
                     print("Not a critical error and can be ignored unless it's a common occurrence.")
                     continue
                 if year == 'None':
-                    print("---script failed---")
+                    print("----Script failed----")
                     print("No year were found for the movie \"" + title + "\" and it was skipped.")
                     print("Not a critical error and can be ignored unless it's a common occurrence.")
                     continue
                 if rating == 'None':
-                    print("---script failed---")
+                    print("----Script failed----")
                     print("No rating were found for the \"" + title + "\" and it was skipped.")
                     print("Not a critical error and can be ignored unless it's a common occurrence.")
                     continue
@@ -279,7 +279,7 @@ class PlexDBI:
                     data = json.loads(response.read().decode('utf-8'))
 
                 except urllib.error.HTTPError as e:
-                    print("---script failed---")
+                    print("----Script failed----")
                     print("TMDB api failed, skipping one movie from the category 'Hidden Gems' see error: ")
                     print("URL requested: " + e.geturl())
                     print("Reason: " + e.reason)
@@ -296,7 +296,7 @@ class PlexDBI:
 
             if selected_id >= 0:
                 local_movie_list.append(selected_id)
-                print('Adding to movie queue. movie:"  ' + selected_title + '"')
+                print('Adding to movie queue. movie:  "' + selected_title.replace('+', ' ') + '"')
 
         return local_movie_list
 
@@ -314,29 +314,29 @@ class PlexDBI:
             title = str(row[1])
 
             if title == 'None':
-                print("---script failed---")
+                print("----Script failed----")
                 print("No title were found for a movie and it was skipped.")
                 print("Not a critical error and can be ignored unless it's a common occurrence.")
                 print("movie_id: " + movie_id)
                 continue
             if movie_id == 'None':
-                print("---script failed---")
+                print("----Script failed----")
                 print("No id were found for the movie \"" + title + "\" and it was skipped.")
                 print("Not a critical error and can be ignored unless it's a common occurrence.")
                 continue
 
             local_movie_list.append(movie_id)
-            print('Adding to movie queue. movie:"  ' + title + '"')
+            print('Adding to movie queue. movie:  "' + title + '"')
 
         return local_movie_list
 
     def commit(self, id_list):
         if self.sudo:
-            print('-Stopping plexmediaserver:...')
+            print('--Stopping plexmediaserver:...')
             os.system("sudo service plexmediaserver stop")
 
         pos = 0
-        print('--Processing movie queue...')
+        print('----Processing movie queue...')
         timestamp = datetime.now().replace(microsecond=0) + timedelta(days=+1)
         for movie in id_list:
             now = timestamp + timedelta(seconds=-pos)
@@ -344,11 +344,11 @@ class PlexDBI:
                                 "SET added_at = ?"
                                 "WHERE id = ?", (now.isoformat().replace('T', ' '), movie,))
             pos += 1
-        print('--Movie queue processed, committing to db.')
+        print('----Movie queue processed, committing to db.')
         self.db.commit()
-        print('--changes committed.')
+        print('----changes committed.')
         if self.sudo:
-            print('-Starting plexmediaserver...')
+            print('--Starting plexmediaserver...')
             os.system("sudo service plexmediaserver start")
         else:
             print('you can now proceed to restart your Plex server')
