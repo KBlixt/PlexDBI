@@ -332,11 +332,11 @@ class PlexDBI:
 
     def commit(self, id_list):
         if self.sudo:
-            print('--Stopping plexmediaserver:...')
+            print('--Stopping plexmediaserver:.')
             os.system("sudo service plexmediaserver stop")
 
         pos = 0
-        print('----Processing movie queue...')
+        print('----Processing movie queue.')
         timestamp = datetime.now().replace(microsecond=0) + timedelta(days=+1)
         for movie in id_list:
             now = timestamp + timedelta(seconds=-pos)
@@ -348,7 +348,7 @@ class PlexDBI:
         self.db.commit()
         print('----changes committed.')
         if self.sudo:
-            print('--Starting plexmediaserver...')
+            print('--Starting plexmediaserver.')
             os.system("sudo service plexmediaserver start")
         else:
             print('you can now proceed to restart your Plex server')
