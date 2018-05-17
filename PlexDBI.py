@@ -519,7 +519,7 @@ class PlexDBI:
         f.close()
 
     @staticmethod
-    def backup_database(self):
+    def backup_database():
         if operative_system == 'linux':
             os.system('cp PlexDatabase.db PlexDatabase.backup.db')
         elif operative_system == 'mac_os':
