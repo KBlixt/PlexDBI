@@ -66,7 +66,6 @@ FAIR WARNING:
 this script will edit the PlexMediaServer database directly! specifically, it will change "added_at" in the
 "metadata_items" table.
 
-BACKUP YOUR DATABASES! just in case. 
-though, so far I haven't managed to corrupted mine... yet.
+backup your database! just in case really but so far I haven't managed to corrupted mine. And I've been pretty rough.
 
 ----------
