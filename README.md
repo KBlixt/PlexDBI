@@ -21,7 +21,7 @@ the following movies will appear:
 10. A movie selected randomly in the entire library
 
 ----------
-Ubuntu INSTALLATION:
+linux INSTALLATION:
 
 download the PlexDBI.py file and put it somewhere. for example:
 
@@ -50,9 +50,11 @@ plex is online it will act a bit funky until you restart the plex service.
 ----------
 Other INSTALLATIONS
 
-I really haven't tried yet, the source code should be good for windows with python 3.6.5.
-And it should, in theory, work for other systems as well. As long as they can run python3. they'll have to set up the database 
-manually if the Plex home folder is in a different directory.
+for windows and mac: as long as you guys haven't changed the default installation paths to the plex media server app
+you really just need to download the python script and run it and follow the instructions the script gives you.
+
+for NAS and other OS: I really have no clue. if you setup the config file and the database link manually then the
+script should run as long as you can run python3 code.
 
 ----------
 FAIR WARNING:
