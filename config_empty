@@ -1,0 +1,40 @@
+
+[REQUIRED]
+    MOVIE_LIBRARY_SECTION = 
+
+[OPTIONAL]
+    # leave blank if you don't have a key.
+    TMDB_API_KEY = 
+
+[MOVIES_SETTINGS]
+    # Here you can control the settings for each individual category
+    # the "COUNT" parameter specifies how manny movies from each category will be modified
+    # and the "ORDER" specifies in what order the categories will appear.
+
+    # The [RECENT_RELEASES] category will provide a list of movies with the most recent releases
+    # that isn't older than the[DAY_LIMIT].
+    # At least [MIN_COUNT] and at the most [MAX_COUNT] will be provided.
+    [RECENT_RELEASES]
+        MIN_COUNT = 3
+        MAX_COUNT = 7
+        ORDER = 1
+        DAY_LIMIT = 14
+
+    # The [OLD_BUT_GOLD] category will provide a random list of movies
+    # that is at least [YEAR_LIMIT] old
+    # years old but with a minimum critic score of [CRITIC_SCORE] (in a scale from 0 to 10)
+    [OLD_BUT_GOLD]
+        COUNT = 1
+        ORDER = 2
+        YEAR_LIMIT = 10
+        MIN_CRITIC_SCORE = 7.9
+    # The [HIDDEN_GEM] category will provide a random list of movies
+    # that have a low popularity on TMDB.
+    # Note that this category requires an TMDB_API_KEY to be used.
+    [HIDDEN_GEM]
+        COUNT = 1
+        ORDER = 3
+    # The [RANDOM] category will provide a list of random movies.
+    [RANDOM]
+        COUNT = 1
+        ORDER = 4
