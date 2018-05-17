@@ -63,6 +63,7 @@ class PlexMoviesDBI:
             print('you can fill in the empty one and rename it to "config".')
             print('---------------------------------------------------------------------------')
             raise ValueError
+        self.check_library_section(self.library_section)
 
         self.order_power = max(self.recent_releases_maximum_count,
                                self.random_count,
@@ -116,20 +117,24 @@ class PlexMoviesDBI:
                             "FROM library_sections "
                             "WHERE id = ?", (library_section,))
         info = self.cursor.fetchone()
-        if info[0] == 'xn' or info[1] != 1:
-            print('Your MOVIE_LIBRARY_SECTION parameter in the config file is not a Movie library.')
-            print('These libraries are movie libraries and can be used in this script:')
-            print('--------------------------------------------------------------------------')
+        if 'info[0]' in locals():
+            if info[0] == 'xn' or info[1] != 1 or 'info[0]' in locals():
+                print('Your MOVIE_LIBRARY_SECTION parameter in the config file is not a Movie library.')
+                print('These libraries are movie libraries and can be used in this script:')
+                print('-----------------------------------------------------------------------------------------')
 
-            for library in self.cursor.execute("SELECT id, name "
-                                               "FROM library_sections "
-                                               "WHERE language IS NOT 'xn' "
-                                               "AND section_type = 1 "
-                                               "ORDER BY id ASC "):
-                print('The library "' + library[1] + '" have section_id: ' + str(library[0]) + '.')
+                for library in self.cursor.execute("SELECT id, name "
+                                                   "FROM library_sections "
+                                                   "WHERE language IS NOT 'xn' "
+                                                   "AND section_type = 1 "
+                                                   "ORDER BY id ASC "):
+                    print('The library "' + library[1] + '" have section_id: ' + str(library[0]) + '.')
 
-            print('--------------------------------------------------------------------------')
-            print('Please use one of these ID\'s as your MOVIE_LIBRARY_SECTION parameter.')
+                print('-----------------------------------------------------------------------------------------')
+                print('Please use one of these ID\'s as your MOVIE_LIBRARY_SECTION parameter in the config file.')
+
+                return False
+        else:
 
             return False
         return True

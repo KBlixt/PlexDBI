@@ -20,6 +20,8 @@ the following movies will appear:
 
 10. A movie selected randomly in the entire library
 
+This can now be modified to your liking in the config file.
+
 ----------
 linux INSTALLATION:
 
@@ -51,7 +53,9 @@ plex is online it will act a bit funky until you restart the plex service.
 Other INSTALLATIONS
 
 for windows and mac: as long as you guys haven't changed the default installation paths to the plex media server app
-you really just need to download the python script and run it and follow the instructions the script gives you.
+you really just need to download the python script and run it  with python3, however you guys do that.
+preferably run it in a command window, then it'll instruct you of what's wrong and how to fix it. otherwise make sure
+the config file is filled out correctly.
 
 for NAS and other OS: I really have no clue. if you setup the config file and the database link manually then the
 script should run as long as you can run python3 code.
