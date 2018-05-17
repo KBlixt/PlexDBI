@@ -251,7 +251,6 @@ class PlexMoviesDBI:
 
     def old_but_gold(self, count, order, age_limit, score_limit):
         self.movies_provided = 0
-        check = datetime.now() + timedelta(days=+(age_limit*365))
         for movie_info in self.cursor.execute("SELECT id,title "  # old but gold
                                               "FROM metadata_items "
                                               "WHERE id IN (SELECT id FROM metadata_items ORDER BY RANDOM()) "
