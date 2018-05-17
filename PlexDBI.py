@@ -255,7 +255,7 @@ class PlexMoviesDBI:
         for movie_info in self.cursor.execute("SELECT id,title "  # old but gold
                                               "FROM metadata_items "
                                               "WHERE id IN (SELECT id FROM metadata_items ORDER BY RANDOM()) "
-                                              "AND originally_available_at < ? "
+                                              "AND originally_available_at > ? "
                                               "AND rating > ? "
                                               "AND library_section_id = ? "
                                               "AND metadata_type = 1 "
