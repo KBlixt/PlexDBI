@@ -413,14 +413,14 @@ class PlexDBI:
 
     def commit(self, mod_queue):
         if self.config.get('OPTIONAL', 'BACKUP') == 'yes':
-            if operative_system == 'linux':
+            if op_system == 'linux':
                 if self.root_access:
                     print('--Stopping plexmediaserver.')
                     os.system("sudo service plexmediaserver stop")
-            elif operative_system == 'windows':
+            elif op_system == 'windows':
                 print('--Stopping plexmediaserver.')
                 os.system('taskkill /F /IM "Plex Media Server.exe" /T')
-            elif operative_system == 'mac_os':
+            elif op_system == 'mac_os':
                 os.system('killall "Plex Media Server"')
 
         print('----Processing movie queue.')
@@ -434,33 +434,33 @@ class PlexDBI:
         print('----Movie queue processed, committing to db.')
         self.database.commit()
         print('----Changes committed.')
-        if operative_system == 'linux':
+        if op_system == 'linux':
                 if self.root_access:
                     print('--Starting plexmediaserver.')
                     os.system("sudo service plexmediaserver start")
                 else:
                     print('You can now proceed to restart your Plex server.')
-        elif operative_system == 'windows':
+        elif op_system == 'windows':
             print('--Starting plexmediaserver.')
             os.system('start /B "C:\Program Files\Plex Media Server\Plex Media Server.exe"')
             os.system('start /B "C:\Program Files (x86)\Plex Media Server\Plex Media Server.exe"')
             print("")
-        elif operative_system == 'mac_os':
+        elif op_system == 'mac_os':
             print('--Starting plexmediaserver.')
             os.system('open /Applications/Plex\ Media\ Server.app')
         else:
             print('You can now proceed to restart your Plex server.')
 
     def symlink_database(self, database_file):
-        if operative_system == 'linux':
+        if op_system == 'linux':
             if self.root_access:
                 os.system('ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/'
                           'Plug-in Support/Databases/com.plexapp.plugins.library.db" "'
                           + os.getcwd() + '/' + database_file + '"')
-        elif operative_system == 'windows':
+        elif op_system == 'windows':
             os.system('mklink %LOCALAPPDATA%\Plex Media Server\Plug-in Support\Databases\com.plexapp.plugins.library.db'
                       ' "' + os.getcwd() + '/' + database_file + '"')
-        elif operative_system == 'mac_os':
+        elif op_system == 'mac_os':
             os.system('ln -s ~/Library/Application Support/Plex Media Server/Plug-in Support/Databases/'
                       'com.plexapp.plugins.library.db'
                       ' "' + os.getcwd() + '/' + database_file + '"')
@@ -520,11 +520,11 @@ class PlexDBI:
 
     @staticmethod
     def backup_database():
-        if operative_system == 'linux':
+        if op_system == 'linux':
             os.system('cp PlexDatabase.db PlexDatabase.backup.db')
-        elif operative_system == 'mac_os':
+        elif op_system == 'mac_os':
             os.system('cp PlexDatabase.db PlexDatabase.backup.db')
-        elif operative_system == 'windows':
+        elif op_system == 'windows':
             os.system('copy PlexDatabase.db PlexDatabase.backup.db')
 
 
@@ -532,34 +532,34 @@ start = time.time()
 
 
 if _platform == "linux" or _platform == "linux2":
-    operative_system = 'linux'
+    op_system = 'linux'
 elif _platform == "darwin":
-    operative_system = 'mac_os'
+    op_system = 'mac_os'
 elif _platform == "win32" or _platform == "win64":
-    operative_system = 'windows'
+    op_system = 'windows'
 else:
-    operative_system = 'unknown'
+    op_system = 'unknown'
     print("---------------------------------------------------------------------------------------------------------")
     print("You are not running this script on a Linux, Windows or mac OS, I'm not sure how this will effect")
     print("this script. But anything that requires to input or output to the system will excluded when running this")
     print("script. It mostly need that capability when setting up files. So if you make sure you have the ")
     print("database and the config file in place the rest should run smoothly")
     print("---------------------------------------------------------------------------------------------------------")
-if operative_system == 'linux':
+if op_system == 'linux':
 
     try:
         has_root_access = 0 == os.getuid()
     except AttributeError as e:
         print(e.args)
         has_root_access = False
-elif operative_system == 'windows' or operative_system == 'mac_os':
+elif op_system == 'windows' or op_system == 'mac_os':
     has_root_access = True
 else:
     has_root_access = False
 
 
 try:
-    modify_plex_server_1 = PlexDBI(operative_system, has_root_access, 'PlexDatabase.db', 'config')
+    modify_plex_server_1 = PlexDBI(op_system, has_root_access, 'PlexDatabase.db', 'config')
 except ValueError:
     pass
 end = time.time()
