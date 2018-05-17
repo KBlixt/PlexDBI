@@ -23,45 +23,47 @@ the following movies will appear:
 This can now be modified to your liking in the config file.
 
 ----------
-linux INSTALLATION:
+### linux INSTALLATION:
 
 download the PlexDBI.py file and put it somewhere. for example:
-
+```sh
     cd /opt && git clone https://github.com/KBlixt/PlexDBI.git && cd PlexDBI
-
+```
 at this point you can run it if you give it sudo privileges, it will set up the syslink for the database and the config file for you.
 but you'll still have to configure the config file. but just run the script and it will tell you what's wrong
 and how to fix it.
-
+```sh
     sudo python3 PlexDBI.py
-
+```
 then it's up to you if you wish to add it to a crontab schedule, personally i've got it scheduled once a day at 10:30
 with sudo privileges.
-
+```sh
     30 10 * * * cd /opt/PlexDBI/  && sudo /usr/bin/python3 /opt/PlexDBI/PlexDBI.py
-
+```
 If you don't want to give it sudo privileges then you'll have make a symlink for the database. i.e:
-
+```sh
     ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db" PlexDatabase.db
-
+```
 Without sudo privilege you'll have to remember to stop plexmediaserver before you run the script and then restart it
 since it can't shut down the plex service without sudo privileges. now, I've been running this script plenty of times
 with plex still online so I think it's ok, but I'm not sure. better safe than sorry. although, if you run it while
 plex is online it will act a bit funky until you restart the plex service.
 
 ----------
-Other INSTALLATIONS
+### Other INSTALLATIONS
 
-for windows and mac: as long as you guys haven't changed the default installation paths to the plex media server app
+#### for windows and mac:
+As long as you guys haven't changed the default installation paths to the plex media server app
 you really just need to download the python script and run it  with python3, however you guys do that.
 preferably run it in a command window, then it'll instruct you of what's wrong and how to fix it. otherwise make sure
 the config file is filled out correctly.
 
-for NAS and other OS: I really have no clue. if you setup the config file and the database link manually then the
+#### for NAS and other OS:
+I really have no clue. if you setup the config file and the database link manually then the
 script should run as long as you can run python3 code.
 
 ----------
-FAIR WARNING:
+## FAIR WARNING:
 
 this script will edit the PlexMediaServer database directly! specifically, it will change "added_at" in the
 "metadata_items" table.
