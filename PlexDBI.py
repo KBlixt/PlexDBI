@@ -49,15 +49,14 @@ class PlexMoviesDBI:
             self.random_order = int(self.config.get('RANDOM', 'ORDER'))
             if self.recent_releases_minimum_count < 0:
                 self.recent_releases_minimum_count = 0
-            if self.recent_releases_maximum_count < self.recent_releases_minimum_count:
-                self.recent_releases_maximum_count = self.recent_releases_minimum_count
+            if self.recent_releases_minimum_count > self.recent_releases_maximum_count:
+                self.recent_releases_minimum_count = self.recent_releases_maximum_count
             if self.old_but_gold_count < 0:
                 self.old_but_gold_count = 0
             if self.hidden_gem_count < 0:
                 self.hidden_gem_count = 0
             if self.random_count < 0:
                 self.random_count = 0
-
 
         except ValueError:
             print('---------------------------------------------------------------------------')
@@ -74,6 +73,7 @@ class PlexMoviesDBI:
             print('you can fill in the empty one and rename it to "config".')
             print('---------------------------------------------------------------------------')
             raise ValueError
+
         if not self.check_library_section(self.library_section):
             raise ValueError
 
@@ -231,34 +231,34 @@ class PlexMoviesDBI:
                     continue
 
                 self.add_to_queue(movie_id, order, title)
+        if minimum - len(self.local_movie_list) > 0:
+            for movieInfo in self.cursor.execute("SELECT id,title "  # ...but at least the last 3 movies
+                                                 "FROM metadata_items "
+                                                 "WHERE library_section_id = ? "
+                                                 "AND metadata_type = 1 "
+                                                 "AND duration > 1 "
+                                                 "AND originally_available_at < ? "
+                                                 "ORDER BY originally_available_at DESC "
+                                                 "LIMIT ?", (self.library_section,
+                                                             reference_date.isoformat().replace('T', ' '),
+                                                             minimum - len(self.local_movie_list),)):
 
-        for movieInfo in self.cursor.execute("SELECT id,title "  # ...but at least the last 3 movies
-                                             "FROM metadata_items "
-                                             "WHERE library_section_id = ? "
-                                             "AND metadata_type = 1 "
-                                             "AND duration > 1 "
-                                             "AND originally_available_at < ? "
-                                             "ORDER BY originally_available_at DESC "
-                                             "LIMIT ?", (self.library_section,
-                                                         reference_date.isoformat().replace('T', ' '),
-                                                         minimum - len(self.local_movie_list),)):
+                movie_id = movieInfo[0]
+                title = str(movieInfo[1])
 
-            movie_id = movieInfo[0]
-            title = str(movieInfo[1])
+                if title == 'None':
+                    print("----Script failed----")
+                    print("No title were found for a movie and it was skipped.")
+                    print("Not a critical error and can be ignored unless it's a common occurrence.")
+                    print("movie_id: " + movie_id)
+                    continue
+                elif movie_id == 'None':
+                    print("----Script failed----")
+                    print("No id were found for a movie and it was skipped.")
+                    print("Not a critical error and can be ignored unless it's a common occurrence.")
+                    continue
 
-            if title == 'None':
-                print("----Script failed----")
-                print("No title were found for a movie and it was skipped.")
-                print("Not a critical error and can be ignored unless it's a common occurrence.")
-                print("movie_id: " + movie_id)
-                continue
-            elif movie_id == 'None':
-                print("----Script failed----")
-                print("No id were found for a movie and it was skipped.")
-                print("Not a critical error and can be ignored unless it's a common occurrence.")
-                continue
-
-            self.add_to_queue(movie_id, order, title)
+                self.add_to_queue(movie_id, order, title)
 
     def old_but_gold(self, count, order, age_limit, score_limit):
         self.movies_provided = 0
