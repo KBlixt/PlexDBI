@@ -455,7 +455,7 @@ class PlexDBI:
 
         f.write('')
         f.write('\n[REQUIRED]')
-        f.write('\n    MOVIE_LIBRARY_SECTION = ')
+        f.write('\n    MOVIE_LIBRARY_SECTION = 0')
         f.write('\n')
         f.write('\n[OPTIONAL]')
         f.write('\n    # leave blank if you don\'t have a key.')

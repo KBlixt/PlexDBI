@@ -13,7 +13,7 @@ the following movies will appear:
 6. The movie in the database with the 6th latest release date. Provided that it isn't more than 14 day older than the latest.
 7. The movie in the database with the 7th latest release date. Provided that it isn't more than 14 day older than the latest.
 
-8. A movie that's older than 10 years with a imdb score of 8 or more will be placed here. "Old but Gold"
+8. A movie that's older than 10 years with a Imdb score of 8 or more will be placed here. "Old but Gold"
 
 9. With  the tmdb api a random movie with a relative low popularity on tmdb will be chosen.
    young movies and good rating increases likely hood of getting "picked". I call it "The Hidden Gem".
