@@ -47,6 +47,17 @@ class PlexMoviesDBI:
 
             self.random_count = int(self.config.get('RANDOM', 'COUNT'))
             self.random_order = int(self.config.get('RANDOM', 'ORDER'))
+            if self.recent_releases_minimum_count < 0:
+                self.recent_releases_minimum_count = 0
+            if self.recent_releases_maximum_count < self.recent_releases_minimum_count:
+                self.recent_releases_maximum_count = self.recent_releases_minimum_count
+            if self.old_but_gold_count < 0:
+                self.old_but_gold_count = 0
+            if self.hidden_gem_count < 0:
+                self.hidden_gem_count = 0
+            if self.random_count < 0:
+                self.random_count = 0
+
 
         except ValueError:
             print('---------------------------------------------------------------------------')
