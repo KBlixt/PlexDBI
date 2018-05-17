@@ -23,7 +23,7 @@ the following movies will appear:
 **This can now be modified to your liking in the config file.**
 
 ----------
-### linux INSTALLATION:
+### Linux installation:
 
 download the PlexDBI.py file and put it somewhere. for example:
 ```sh
@@ -50,12 +50,12 @@ with plex still online so I think it's ok, but I'm not sure. better safe than so
 plex is online it will act a bit funky until you restart the plex service.
 
 ----------
-### Other INSTALLATIONS
+### Other installations:
 
 #### for windows and mac:
 As long as you guys haven't changed the default installation paths to the plex media server app
-you really just need to download the python script and run it  with python3, however you guys do that.
-preferably run it in a command window, then it'll instruct you of what's wrong and how to fix it. Otherwise make sure
+you really just need to download the script and run it with the latest available python3, however you guys do that.
+Preferably run it in a command window, then it'll instruct you of what's wrong and how to fix it. Otherwise make sure
 the config file is filled out correctly.
 
 #### for NAS and other OS:
@@ -68,6 +68,6 @@ script should run as long as you can run python3 code.
 This script will edit the PlexMediaServer database directly! Specifically, it will change "added_at" in the
 "metadata_items" table.
 
-Backup your database! Just in case really but so far I haven't managed to corrupted mine. And I've been pretty rough.
+Backup your database! Just in case really because so far I haven't managed to corrupted mine. And I've been pretty rough.
 
 ----------
