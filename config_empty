@@ -4,7 +4,9 @@
 
 [OPTIONAL]
     # leave blank if you don't have a key.
-    TMDB_API_KEY = 
+    TMDB_API_KEY =
+    # Do you want to make a copy of your database before modifying it? (yes/no)')
+    BACKUP = yes
 
 [MOVIES_SETTINGS]
     # Here you can control the settings for each individual category
