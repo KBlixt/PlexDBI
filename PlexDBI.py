@@ -26,27 +26,27 @@ class PlexMoviesDBI:
         self.local_movie_list = dict()
         self.movies_provided = 0
 
-        config = configparser.ConfigParser()
-        config.read(config_file)
+        self.config = configparser.ConfigParser()
+        self.config.read(config_file)
         try:
-            self.library_section = int(config.get('REQUIRED', 'MOVIE_LIBRARY_SECTION'))
-            self.tmdb_api_key = config.get('OPTIONAL', 'TMDB_API_KEY')
+            self.library_section = int(self.config.get('REQUIRED', 'MOVIE_LIBRARY_SECTION'))
+            self.tmdb_api_key = self.config.get('OPTIONAL', 'TMDB_API_KEY')
 
-            self.recent_releases_minimum_count = int(config.get('RECENT_RELEASES', 'MIN_COUNT'))
-            self.recent_releases_maximum_count = int(config.get('RECENT_RELEASES', 'MAX_COUNT'))
-            self.recent_releases_order = int(config.get('RECENT_RELEASES', 'ORDER'))
-            self.recent_releases_day_limit = int(config.get('RECENT_RELEASES', 'DAY_LIMIT'))
+            self.recent_releases_minimum_count = int(self.config.get('RECENT_RELEASES', 'MIN_COUNT'))
+            self.recent_releases_maximum_count = int(self.config.get('RECENT_RELEASES', 'MAX_COUNT'))
+            self.recent_releases_order = int(self.config.get('RECENT_RELEASES', 'ORDER'))
+            self.recent_releases_day_limit = int(self.config.get('RECENT_RELEASES', 'DAY_LIMIT'))
 
-            self.old_but_gold_count = int(config.get('OLD_BUT_GOLD', 'COUNT'))
-            self.old_but_gold_order = int(config.get('OLD_BUT_GOLD', 'ORDER'))
-            self.old_but_gold_year_limit = int(config.get('OLD_BUT_GOLD', 'YEAR_LIMIT'))
-            self.old_but_gold_min_critic_score = float(config.get('OLD_BUT_GOLD', 'MIN_CRITIC_SCORE'))
+            self.old_but_gold_count = int(self.config.get('OLD_BUT_GOLD', 'COUNT'))
+            self.old_but_gold_order = int(self.config.get('OLD_BUT_GOLD', 'ORDER'))
+            self.old_but_gold_year_limit = int(self.config.get('OLD_BUT_GOLD', 'YEAR_LIMIT'))
+            self.old_but_gold_min_critic_score = float(self.config.get('OLD_BUT_GOLD', 'MIN_CRITIC_SCORE'))
 
-            self.hidden_gem_count = int(config.get('HIDDEN_GEM', 'COUNT'))
-            self.hidden_gem_order = int(config.get('HIDDEN_GEM', 'ORDER'))
+            self.hidden_gem_count = int(self.config.get('HIDDEN_GEM', 'COUNT'))
+            self.hidden_gem_order = int(self.config.get('HIDDEN_GEM', 'ORDER'))
 
-            self.random_count = int(config.get('RANDOM', 'COUNT'))
-            self.random_order = int(config.get('RANDOM', 'ORDER'))
+            self.random_count = int(self.config.get('RANDOM', 'COUNT'))
+            self.random_order = int(self.config.get('RANDOM', 'ORDER'))
 
         except ValueError:
             print('---------------------------------------------------------------------------')
@@ -63,7 +63,8 @@ class PlexMoviesDBI:
             print('you can fill in the empty one and rename it to "config".')
             print('---------------------------------------------------------------------------')
             raise ValueError
-        self.check_library_section(self.library_section)
+        if not self.check_library_section(self.library_section):
+            raise ValueError
 
         self.order_power = max(self.recent_releases_maximum_count,
                                self.random_count,
@@ -116,9 +117,12 @@ class PlexMoviesDBI:
         self.cursor.execute("SELECT language,section_type "
                             "FROM library_sections "
                             "WHERE id = ?", (library_section,))
+
         info = self.cursor.fetchone()
-        if 'info[0]' in locals():
-            if info[0] == 'xn' or info[1] != 1 or 'info[0]' in locals():
+
+        try:
+
+            if info[0] == 'xn' or info[1] != 1:
                 print('Your MOVIE_LIBRARY_SECTION parameter in the config file is not a Movie library.')
                 print('These libraries are movie libraries and can be used in this script:')
                 print('-----------------------------------------------------------------------------------------')
@@ -134,7 +138,20 @@ class PlexMoviesDBI:
                 print('Please use one of these ID\'s as your MOVIE_LIBRARY_SECTION parameter in the config file.')
 
                 return False
-        else:
+        except TypeError:
+            print('Your MOVIE_LIBRARY_SECTION parameter in the config file is not a Movie library.')
+            print('These libraries are movie libraries and can be used in this script:')
+            print('-----------------------------------------------------------------------------------------')
+
+            for library in self.cursor.execute("SELECT id, name "
+                                               "FROM library_sections "
+                                               "WHERE language IS NOT 'xn' "
+                                               "AND section_type = 1 "
+                                               "ORDER BY id ASC "):
+                print('The library "' + library[1] + '" have section_id: ' + str(library[0]) + '.')
+
+            print('-----------------------------------------------------------------------------------------')
+            print('Please use one of these ID\'s as your MOVIE_LIBRARY_SECTION parameter in the config file.')
 
             return False
         return True
@@ -381,27 +398,30 @@ class PlexDBI:
             self.symlink_database(database_file)
         self.database = sqlite3.connect(database_file)
         self.cursor = self.database.cursor()
+
+        self.config = configparser.ConfigParser()
+        self.config.read(config_file)
+
         try:
             movies = PlexMoviesDBI(self.cursor, config_file)
             mod_queue = movies.find_movies()
             self.commit(mod_queue)
-
         except ValueError:
             raise ValueError
 
         self.database.close()
 
     def commit(self, mod_queue):
-
-        if operative_system == 'linux':
-            if self.root_access:
+        if self.config.get('OPTIONAL', 'BACKUP') == 'yes':
+            if operative_system == 'linux':
+                if self.root_access:
+                    print('--Stopping plexmediaserver.')
+                    os.system("sudo service plexmediaserver stop")
+            elif operative_system == 'windows':
                 print('--Stopping plexmediaserver.')
-                os.system("sudo service plexmediaserver stop")
-        elif operative_system == 'windows':
-            print('--Stopping plexmediaserver.')
-            os.system('taskkill /F /IM "Plex Media Server.exe" /T')
-        elif operative_system == 'mac_os':
-            os.system('killall "Plex Media Server"')
+                os.system('taskkill /F /IM "Plex Media Server.exe" /T')
+            elif operative_system == 'mac_os':
+                os.system('killall "Plex Media Server"')
 
         print('----Processing movie queue.')
         timestamp = datetime.now().replace(microsecond=0) + timedelta(days=+1)
@@ -460,6 +480,8 @@ class PlexDBI:
         f.write('\n[OPTIONAL]')
         f.write('\n    # leave blank if you don\'t have a key.')
         f.write('\n    TMDB_API_KEY = ')
+        f.write('\n    # Do you want to make a copy of your database before modifying it? (yes/no)')
+        f.write('\n    BACKUP = yes')
         f.write('\n')
         f.write('\n[MOVIES_SETTINGS]')
         f.write('\n    # Here you can control the settings for each individual category')
@@ -496,8 +518,18 @@ class PlexDBI:
         f.write('\n')
         f.close()
 
+    @staticmethod
+    def backup_database(self):
+        if operative_system == 'linux':
+            os.system('cp PlexDatabase.db PlexDatabase.backup.db')
+        elif operative_system == 'mac_os':
+            os.system('cp PlexDatabase.db PlexDatabase.backup.db')
+        elif operative_system == 'windows':
+            os.system('copy PlexDatabase.db PlexDatabase.backup.db')
+
 
 start = time.time()
+
 
 if _platform == "linux" or _platform == "linux2":
     operative_system = 'linux'
