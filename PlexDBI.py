@@ -11,10 +11,12 @@ try:
     import time
     import os
     from collections import OrderedDict
+    from sys import platform as _platform
 except ImportError:
+    print('-------------------------------------------------------------------')
     print('Unable to import one or more modules.')
     print('Make sure that you are running the script with an updated python 3.')
-    print('Exiting.')
+    print('-------------------------------------------------------------------')
     sys.exit()
 
 
@@ -385,9 +387,16 @@ class PlexDBI:
         self.database.close()
 
     def commit(self, mod_queue):
-        if self.root_access:
+
+        if operative_system == 'linux':
+            if self.root_access:
+                print('--Stopping plexmediaserver.')
+                os.system("sudo service plexmediaserver stop")
+        elif operative_system == 'windows':
             print('--Stopping plexmediaserver.')
-            os.system("sudo service plexmediaserver stop")
+            os.system('taskkill /F /IM "Plex Media Server.exe" /T')
+        elif operative_system == 'mac_os':
+            os.system('killall "Plex Media Server"')
 
         print('----Processing movie queue.')
         timestamp = datetime.now().replace(microsecond=0) + timedelta(days=+1)
@@ -399,22 +408,45 @@ class PlexDBI:
 
         print('----Movie queue processed, committing to db.')
         self.database.commit()
-        print('----changes committed.')
-        if self.root_access:
+        print('----Changes committed.')
+        if operative_system == 'linux':
+                if self.root_access:
+                    print('--Starting plexmediaserver.')
+                    os.system("sudo service plexmediaserver start")
+                else:
+                    print('You can now proceed to restart your Plex server.')
+        elif operative_system == 'windows':
             print('--Starting plexmediaserver.')
-            os.system("sudo service plexmediaserver start")
+            os.system('start /B "C:\Program Files\Plex Media Server\Plex Media Server.exe"')
+            os.system('start /B "C:\Program Files (x86)\Plex Media Server\Plex Media Server.exe"')
+            print("")
+        elif operative_system == 'mac_os':
+            print('--Starting plexmediaserver.')
+            os.system('open /Applications/Plex\ Media\ Server.app')
         else:
-            print('you can now proceed to restart your Plex server')
+            print('You can now proceed to restart your Plex server.')
 
     def symlink_database(self, database_file):
-        if self.root_access:
-            os.system('ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/'
-                      'Plug-in Support/Databases/com.plexapp.plugins.library.db" "'
-                      + os.getcwd() + '/"' + database_file)
+        if operative_system == 'linux':
+            if self.root_access:
+                os.system('ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/'
+                          'Plug-in Support/Databases/com.plexapp.plugins.library.db" "'
+                          + os.getcwd() + '/' + database_file + '"')
+        elif operative_system == 'windows':
+            os.system('mklink %LOCALAPPDATA%\Plex Media Server\Plug-in Support\Databases\com.plexapp.plugins.library.db'
+                      ' "' + os.getcwd() + '/' + database_file + '"')
+        elif operative_system == 'mac_os':
+            os.system('ln -s ~/Library/Application Support/Plex Media Server/Plug-in Support/Databases/'
+                      'com.plexapp.plugins.library.db'
+                      ' "' + os.getcwd() + '/' + database_file + '"')
+        else:
+            pass
 
     def generate_config(self, config_file_name):
-        f = open("config", "w+")
-        os.system("sudo chown --reference=" + os.getcwd() + "/PlexDBI.py " + config_file_name)
+        f = open(config_file_name, "w+")
+
+        if self.operative_system == 'linux':
+            os.system("sudo chown --reference=" + os.getcwd() + "/PlexDBI.py " + config_file_name)
 
         f.write('')
         f.write('\n[REQUIRED]')
@@ -462,17 +494,38 @@ class PlexDBI:
 
 start = time.time()
 
-try:
-    has_root_access = 0 == os.getuid()
-except AttributeError as e:
-    print(e.args)
+if _platform == "linux" or _platform == "linux2":
+    operative_system = 'linux'
+elif _platform == "darwin":
+    operative_system = 'mac_os'
+elif _platform == "win32" or _platform == "win64":
+    operative_system = 'windows'
+else:
+    operative_system = 'unknown'
+    print("---------------------------------------------------------------------------------------------------------")
+    print("You are not running this script on a Linux, Windows or mac OS, I'm not sure how this will effect")
+    print("this script. But anything that requires to input or output to the system will excluded when running this")
+    print("script. It mostly need that capability when setting up files. So if you make sure you have the ")
+    print("database and the config file in place the rest should run smoothly")
+    print("---------------------------------------------------------------------------------------------------------")
+if operative_system == 'linux':
+
+    try:
+        has_root_access = 0 == os.getuid()
+    except AttributeError as e:
+        print(e.args)
+        has_root_access = False
+elif operative_system == 'windows' or operative_system == 'mac_os':
+    has_root_access = True
+else:
     has_root_access = False
 
-# todo: define OS.
+
 try:
-    modify_plex_server_1 = PlexDBI('not sure', has_root_access, 'PlexDatabase.db', 'config')
+    modify_plex_server_1 = PlexDBI(operative_system, has_root_access, 'PlexDatabase.db', 'config')
 except ValueError:
     pass
 end = time.time()
+
 print("----End of script----")
 print("Script completed in " + str(int(end - start)) + " seconds.")
