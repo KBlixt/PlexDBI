@@ -414,8 +414,7 @@ class PlexDBI:
 
     def generate_config(self, config_file_name):
         f = open("config", "w+")
-        if self.operative_system == 'ubuntu':
-            os.system("sudo chown --reference=" + os.getcwd() + "/PlexDBI.py " + config_file_name)
+        os.system("sudo chown --reference=" + os.getcwd() + "/PlexDBI.py " + config_file_name)
 
         f.write('')
         f.write('\n[REQUIRED]')
