@@ -20,7 +20,7 @@ the following movies will appear:
 
 10. A movie selected randomly in the entire library
 
-This can now be modified to your liking in the config file.
+**This can now be modified to your liking in the config file.**
 
 ----------
 ### linux INSTALLATION:
