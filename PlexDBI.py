@@ -406,6 +406,8 @@ class PlexDBI:
             movies = PlexMoviesDBI(self.cursor, config_file)
             mod_queue = movies.find_movies()
             self.commit(mod_queue)
+            if self.config.getboolean('OPTIONAL', 'BACKUP'):
+                self.backup_database()
         except ValueError:
             raise ValueError
 
