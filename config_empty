@@ -1,6 +1,6 @@
 
 [REQUIRED]
-    MOVIE_LIBRARY_SECTION = 7
+    MOVIE_LIBRARY_SECTION = 0
 
 [OPTIONAL]
     # leave blank if you don't have a key.
