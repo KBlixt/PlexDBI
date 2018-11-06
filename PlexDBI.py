@@ -428,6 +428,7 @@ class PlexMoviesDBI:
 
 class PlexDBI:
     def __init__(self, operative_system, root_access, database_file, config_file):
+        self.database_file = database_file
         self.os = operative_system
         self.root_access = root_access
         self.operative_system = operative_system
@@ -446,9 +447,9 @@ class PlexDBI:
             movies = PlexMoviesDBI(self.cursor, config_file)
             mod_queue = movies.find_movies()
             if len(mod_queue) > 0:
-                self.commit(mod_queue)
                 if self.config.getboolean('OPTIONAL', 'BACKUP'):
                     self.backup_database()
+                self.commit(mod_queue)
             else:
                 print('Nothing to change. exiting.')
         except ValueError:
@@ -457,6 +458,8 @@ class PlexDBI:
         self.database.close()
 
     def commit(self, mod_queue):
+        if self.config.getboolean('OPTIONAL', 'BACKUP'):
+            copyfile(self.database_file, os.path.join(os.path.dirname(os.path.realpath(__file__)), 'plex.bak.db'))
         if self.config.get('OPTIONAL', 'BACKUP').lower() == 'yes':
             if op_system == 'linux':
                 if self.root_access:
@@ -578,12 +581,7 @@ class PlexDBI:
     @staticmethod
     def backup_database():
 
-        if op_system == 'linux':
-            os.system('cp PlexDatabase.db PlexDatabase.backup.db')
-        elif op_system == 'mac_os':
-            os.system('cp PlexDatabase.db PlexDatabase.backup.db')
-        elif op_system == 'windows':
-            os.system('copy PlexDatabase.db PlexDatabase.backup.db')
+        copyfile()
 
 
 start = time.time()
