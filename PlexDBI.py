@@ -29,24 +29,25 @@ class PlexMoviesDBI:
         self.config = configparser.ConfigParser()
         self.config.read(config_file)
         try:
-            self.library_section = int(self.config.get('REQUIRED', 'MOVIE_LIBRARY_SECTION'))
+            self.library_section = self.config.get('REQUIRED', 'MOVIE_LIBRARY_SECTION')
             self.tmdb_api_key = self.config.get('OPTIONAL', 'TMDB_API_KEY')
+            self.SET_REST_TO_RELEASE = self.config.get('OPTIONAL', 'SET_REST_TO_RELEASE')
 
-            self.recent_releases_minimum_count = int(self.config.get('RECENT_RELEASES', 'MIN_COUNT'))
-            self.recent_releases_maximum_count = int(self.config.get('RECENT_RELEASES', 'MAX_COUNT'))
-            self.recent_releases_order = int(self.config.get('RECENT_RELEASES', 'ORDER'))
-            self.recent_releases_day_limit = int(self.config.get('RECENT_RELEASES', 'DAY_LIMIT'))
+            self.recent_releases_minimum_count = self.config.getint('RECENT_RELEASES', 'MIN_COUNT')
+            self.recent_releases_maximum_count = self.config.getint('RECENT_RELEASES', 'MAX_COUNT')
+            self.recent_releases_order = self.config.getint('RECENT_RELEASES', 'ORDER')
+            self.recent_releases_day_limit = self.config.getint('RECENT_RELEASES', 'DAY_LIMIT')
 
-            self.old_but_gold_count = int(self.config.get('OLD_BUT_GOLD', 'COUNT'))
-            self.old_but_gold_order = int(self.config.get('OLD_BUT_GOLD', 'ORDER'))
-            self.old_but_gold_year_limit = int(self.config.get('OLD_BUT_GOLD', 'YEAR_LIMIT'))
-            self.old_but_gold_min_critic_score = float(self.config.get('OLD_BUT_GOLD', 'MIN_CRITIC_SCORE'))
+            self.old_but_gold_count = self.config.getint('OLD_BUT_GOLD', 'COUNT')
+            self.old_but_gold_order = self.config.getint('OLD_BUT_GOLD', 'ORDER')
+            self.old_but_gold_year_limit = self.config.getint('OLD_BUT_GOLD', 'YEAR_LIMIT')
+            self.old_but_gold_min_critic_score = self.config.getfloat('OLD_BUT_GOLD', 'MIN_CRITIC_SCORE')
 
-            self.hidden_gem_count = int(self.config.get('HIDDEN_GEM', 'COUNT'))
-            self.hidden_gem_order = int(self.config.get('HIDDEN_GEM', 'ORDER'))
+            self.hidden_gem_count = self.config.getint('HIDDEN_GEM', 'COUNT')
+            self.hidden_gem_order = self.config.getint('HIDDEN_GEM', 'ORDER')
 
-            self.random_count = int(self.config.get('RANDOM', 'COUNT'))
-            self.random_order = int(self.config.get('RANDOM', 'ORDER'))
+            self.random_count = self.config.getint('RANDOM', 'COUNT')
+            self.random_order = self.config.getint('RANDOM', 'ORDER')
             if self.recent_releases_minimum_count < 0:
                 self.recent_releases_minimum_count = 0
             if self.recent_releases_minimum_count > self.recent_releases_maximum_count:
@@ -113,7 +114,7 @@ class PlexMoviesDBI:
                           self.old_but_gold_year_limit,
                           self.old_but_gold_min_critic_score)
 
-        if self.tmdb_api_key != '':
+        if len(self.tmdb_api_key) > 5:
             self.hidden_gem(self.hidden_gem_count,
                             self.hidden_gem_order)
         else:
@@ -121,7 +122,9 @@ class PlexMoviesDBI:
 
         self.random(self.random_count,
                     self.random_order)
-
+        if self.SET_REST_TO_RELEASE:
+            self.set_rest_to_release()
+        print('hello')
         return self.local_movie_list
 
     def check_library_section(self, library_section):
@@ -390,6 +393,32 @@ class PlexMoviesDBI:
 
             self.add_to_queue(movie_id, order, title)
 
+    def set_rest_to_release(self):
+        self.movies_provided = 0
+
+        for row in self.cursor.execute("SELECT id,title,originally_available_at,added_at  "  # Random
+                                       "FROM metadata_items "
+                                       "WHERE library_section_id = ? "
+                                       "AND metadata_type = 1 ", self.library_section):
+
+            movie_id = row[0]
+            title = str(row[1])
+
+            if title == 'None':
+                print("----Script failed----")
+                print("No title were found for a movie and it was skipped.")
+                print("Not a critical error and can be ignored unless it's a common occurrence.")
+                print("movie_id: " + movie_id)
+                continue
+            if movie_id == 'None':
+                print("----Script failed----")
+                print("No id were found for the movie \"" + title + "\" and it was skipped.")
+                print("Not a critical error and can be ignored unless it's a common occurrence.")
+                continue
+
+            if movie_id not in self.local_movie_list and row[2] != row[3]:
+                self.local_movie_list[movie_id] = row[2]
+
     def add_to_queue(self, movie_id, order, title):
         self.local_movie_list[movie_id] = self.movies_provided + order * self.order_power
         self.movies_provided += 1
@@ -424,7 +453,7 @@ class PlexDBI:
         self.database.close()
 
     def commit(self, mod_queue):
-        if self.config.get('OPTIONAL', 'BACKUP') == 'yes':
+        if self.config.get('OPTIONAL', 'BACKUP').lower() == 'yes':
             if op_system == 'linux':
                 if self.root_access:
                     print('--Stopping plexmediaserver.')
@@ -438,10 +467,16 @@ class PlexDBI:
         print('----Processing movie queue.')
         timestamp = datetime.now().replace(microsecond=0) + timedelta(days=+1)
         for movie_id in mod_queue:
-            now = timestamp + timedelta(seconds=-mod_queue[movie_id])
-            self.cursor.execute("UPDATE metadata_items "
-                                "SET added_at = ?"
-                                "WHERE id = ?", (now.isoformat().replace('T', ' '), movie_id,))
+            if isinstance(mod_queue[movie_id], int):
+                now = timestamp + timedelta(seconds=-mod_queue[movie_id])
+                self.cursor.execute("UPDATE metadata_items "
+                                    "SET added_at = ?"
+                                    "WHERE id = ?", (now.isoformat().replace('T', ' '), movie_id,))
+            else:
+                self.cursor.execute("UPDATE metadata_items "
+                                    "SET added_at = ?"
+                                    "WHERE id = ?", (mod_queue[movie_id], movie_id,))
+
 
         print('----Movie queue processed, committing to db.')
         self.database.commit()
@@ -570,10 +605,10 @@ else:
     has_root_access = False
 
 
-try:
-    modify_plex_server_1 = PlexDBI(op_system, has_root_access, 'PlexDatabase.db', 'config')
-except ValueError:
-    pass
+#try:
+modify_plex_server_1 = PlexDBI(op_system, has_root_access, 'PlexDatabase.db', 'config')
+#except ValueError:
+#    pass
 end = time.time()
 
 print("----End of script----")
