@@ -60,6 +60,8 @@ you really just need to download the script and run it with the latest available
 Preferably run it in a command window, then it'll instruct you of what's wrong and how to fix it. Otherwise make sure
 the config file is filled out correctly.
 
+(EDIT: seems to be an issue with the syslink. you'll have to make one manually. this is the database you'll have to syslink to "Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
+
 #### for NAS and other OS:
 I really have no clue. if you setup the config file and the database link manually then the
 script should run as long as you can run python3 code.
