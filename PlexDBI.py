@@ -31,7 +31,7 @@ class PlexMoviesDBI:
         try:
             self.library_section = self.config.get('REQUIRED', 'MOVIE_LIBRARY_SECTION')
             self.tmdb_api_key = self.config.get('OPTIONAL', 'TMDB_API_KEY')
-            self.SET_REST_TO_RELEASE = self.config.get('OPTIONAL', 'SET_REST_TO_RELEASE')
+            self.SET_REST_TO_RELEASE = self.config['OPTIONAL'].getboolean('SET_REST_TO_RELEASE', False)
 
             self.recent_releases_minimum_count = self.config.getint('RECENT_RELEASES', 'MIN_COUNT')
             self.recent_releases_maximum_count = self.config.getint('RECENT_RELEASES', 'MAX_COUNT')
@@ -65,7 +65,7 @@ class PlexMoviesDBI:
             print('Make sure that everything in the "REQUIRED" section is filled out correctly.')
             print('All the parameters expects a number except for the TMDB_API_KEY parameter.')
             print('---------------------------------------------------------------------------')
-            raise ValueError
+            raise
         except configparser.NoSectionError:
             print('---------------------------------------------------------------------------')
             print('Something seems to be wrong with the config file.')
@@ -73,7 +73,7 @@ class PlexMoviesDBI:
             print('the config file. Or if the script isn\'t producing a config file as expected')
             print('you can fill in the empty one and rename it to "config".')
             print('---------------------------------------------------------------------------')
-            raise ValueError
+            raise
 
         if not self.check_library_section(self.library_section):
             raise ValueError
@@ -124,7 +124,6 @@ class PlexMoviesDBI:
                     self.random_order)
         if self.SET_REST_TO_RELEASE:
             self.set_rest_to_release()
-        print('hello')
         return self.local_movie_list
 
     def check_library_section(self, library_section):
@@ -444,11 +443,14 @@ class PlexDBI:
         try:
             movies = PlexMoviesDBI(self.cursor, config_file)
             mod_queue = movies.find_movies()
-            self.commit(mod_queue)
-            if self.config.getboolean('OPTIONAL', 'BACKUP'):
-                self.backup_database()
+            if len(mod_queue) > 0:
+                self.commit(mod_queue)
+                if self.config.getboolean('OPTIONAL', 'BACKUP'):
+                    self.backup_database()
+            else:
+                print('Nothing to change. exiting.')
         except ValueError:
-            raise ValueError
+            raise
 
         self.database.close()
 
@@ -476,7 +478,6 @@ class PlexDBI:
                 self.cursor.execute("UPDATE metadata_items "
                                     "SET added_at = ?"
                                     "WHERE id = ?", (mod_queue[movie_id], movie_id,))
-
 
         print('----Movie queue processed, committing to db.')
         self.database.commit()
@@ -605,10 +606,10 @@ else:
     has_root_access = False
 
 
-#try:
-modify_plex_server_1 = PlexDBI(op_system, has_root_access, 'PlexDatabase.db', 'config')
-#except ValueError:
-#    pass
+try:
+    modify_plex_server_1 = PlexDBI(op_system, has_root_access, 'PlexDatabase.db', 'config')
+except ValueError as e:
+    print(e)
 end = time.time()
 
 print("----End of script----")

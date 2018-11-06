@@ -5,6 +5,7 @@
 [OPTIONAL]
     # leave blank if you don't have a key.
     TMDB_API_KEY =
+
     # Do you want to make a copy of your database before modifying it? (yes/no)')
     BACKUP = yes
 
