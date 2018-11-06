@@ -447,8 +447,6 @@ class PlexDBI:
             movies = PlexMoviesDBI(self.cursor, config_file)
             mod_queue = movies.find_movies()
             if len(mod_queue) > 0:
-                if self.config.getboolean('OPTIONAL', 'BACKUP'):
-                    self.backup_database()
                 self.commit(mod_queue)
             else:
                 print('Nothing to change. exiting.')
@@ -578,14 +576,8 @@ class PlexDBI:
         f.write('\n')
         f.close()
 
-    @staticmethod
-    def backup_database():
-
-        copyfile()
-
 
 start = time.time()
-
 
 if _platform == "linux" or _platform == "linux2":
     op_system = 'linux'
