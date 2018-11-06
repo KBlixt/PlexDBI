@@ -457,7 +457,10 @@ class PlexDBI:
 
     def commit(self, mod_queue):
         if self.config.getboolean('OPTIONAL', 'BACKUP'):
-            copyfile(self.database_file, os.path.join(os.path.dirname(os.path.realpath(__file__)), 'plex.bak.db'))
+            try:
+                copyfile(self.database_file, os.path.join(os.path.dirname(os.path.realpath(__file__)), 'plex.bak.db'))
+            except PermissionError:
+                print('failed to create backup: permission denied.')
         if self.config.get('OPTIONAL', 'BACKUP').lower() == 'yes':
             if op_system == 'linux':
                 if self.root_access:
