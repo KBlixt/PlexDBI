@@ -30,24 +30,23 @@ download the PlexDBI.py file and put it somewhere. for example:
     cd /opt && git clone https://github.com/KBlixt/PlexDBI.git && cd PlexDBI
 ```
 At this point you can run it if you give it sudo privileges. It will set up the syslink for the database and the config file for you.
-but you'll still have to configure the config file. But just run the script and it will tell you what's wrong
-and how to fix it.
+you'll still have to configure the config file but just run the script and it will tell you what's wrong and how to fix it.
 ```sh
     sudo python3 PlexDBI.py
 ```
 Then it's up to you if you wish to add it to a crontab schedule, personally i've got it scheduled once a day at 10:30
-with sudo privileges.
+in the root crontab.
 ```sh
-    30 10 * * * cd /opt/PlexDBI/  && sudo /usr/bin/python3 /opt/PlexDBI/PlexDBI.py
+    30 10 * * * cd /opt/PlexDBI/  && /usr/bin/python3 /opt/PlexDBI/PlexDBI.py
 ```
 If you don't want to give it sudo privileges then you'll have make a symlink for the database. i.e:
 ```sh
     ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db" PlexDatabase.db
 ```
 Without sudo privilege you'll also have to remember to stop plexmediaserver before you run the script and then restart it
-since it can't shut down the plex service without sudo privileges. Now, I've been running this script plenty of times
-with plex still online so I think it's ok, but I'm not sure. better safe than sorry. Although, if you run it while
-plex is online it will act a bit funky until you restart the plex service.
+since it can't shut down the plex service without permissions to the "sudo service plexmediaserver stop/start" commands.
+Now, I've been running this script plenty of times with plex still online so I think it's ok, but I'm not sure.
+better safe than sorry. Although, if you run it while plex is online it will act a bit funky until you restart the plex service.
 
 alternative you can allow the user running the script sudo access to the "service plexmediaserver \*" command and it should run nicely as long as you set up the symlink yourself. 
 
@@ -77,10 +76,10 @@ Backup your database! Just in case really because so far I haven't managed to co
 ----------
 
 ### Incoming improvements
-I'll be improving it sometime soon. the follwing things will be added/modified, just send me a msg if you wish to add something and I'll
+I'll be improving it sometime soon. the following things will be added/modified, just send me a msg if you wish to add something and I'll
 take a look at it.
 
-- implementing a option so you can set movies added date to be their release date. 
+- implementing a option so you can set movies added date to be their release date. (done)
 
 - removing the need to make a symlink, just providing the path to the plex home folder should be enough. although the symlink solution 
 have the advantage of avoiding any perimission issue.

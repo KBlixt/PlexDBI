@@ -416,7 +416,8 @@ class PlexMoviesDBI:
                 continue
 
             if movie_id not in self.local_movie_list and row[2] != row[3]:
-                self.local_movie_list[movie_id] = row[2]
+                if 8 < len(row[2]) < 22:
+                    self.local_movie_list[movie_id] = row[2]
 
     def add_to_queue(self, movie_id, order, title):
         self.local_movie_list[movie_id] = self.movies_provided + order * self.order_power
@@ -528,8 +529,14 @@ class PlexDBI:
         f.write('\n[OPTIONAL]')
         f.write('\n    # leave blank if you don\'t have a key.')
         f.write('\n    TMDB_API_KEY = ')
+        f.write('\n')
         f.write('\n    # Do you want to make a copy of your database before modifying it? (yes/no)')
         f.write('\n    BACKUP = yes')
+        f.write('\n')
+        f.write('\n    # if you set the [SET_TO_RELEASE] to true then any other movie not modified by this script will')
+        f.write('\n    # get it\'s added date set to its release date.')
+        f.write('\n    # Use this with every category [COUNT] set to 0 to change all movies to their release date.')
+        f.write('\n    SET_REST_TO_RELEASE = false')
         f.write('\n')
         f.write('\n[MOVIES_SETTINGS]')
         f.write('\n    # Here you can control the settings for each individual category')
