@@ -9,8 +9,9 @@
     # Do you want to make a copy of your database before modifying it? (yes/no)')
     BACKUP = yes
 
-    # if you set the [SET_TO_RELEASE] to true then any other movie not modified by this script will get it's added date
-    # set to its release date. use this with every category [COUNT] set to 0 to change all movies to their release date.
+    # if you set the [SET_TO_RELEASE] to true then any other movie not modified by this script will
+    # get it's added date set to its release date.
+    # Use this with every category [COUNT] set to 0 to change all movies to their release date.
     SET_REST_TO_RELEASE = false
 
 [MOVIES_SETTINGS]
