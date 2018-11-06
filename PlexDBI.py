@@ -416,7 +416,7 @@ class PlexMoviesDBI:
                 continue
 
             if movie_id not in self.local_movie_list and row[2] != row[3]:
-                if len(row[2]) == 19:
+                if 8 < len(row[2]) < 22:
                     self.local_movie_list[movie_id] = row[2]
 
     def add_to_queue(self, movie_id, order, title):
