@@ -52,14 +52,20 @@ alternative you can allow the user running the script sudo access to the "servic
 
 ----------
 ### Other installations:
+#### for windows
+clone the repository, then you'll need to set up a syslink for the database manually using this command when your in the script :
 
-#### for windows and mac:
+```sh
+mklink PlexDatabase.db "C:\Users\USERNAME\AppData\Local\Plex Media Server\Plug-in Support\Databases\com.plexapp.plugins.library.db"
+```
+
+then run it and follow the instructions.
+
+#### for mac:
 As long as you guys haven't changed the default installation paths to the plex media server app
 you really just need to download the script and run it with the latest available python3, however you guys do that.
 Preferably run it in a command window, then it'll instruct you of what's wrong and how to fix it. Otherwise make sure
 the config file is filled out correctly.
-
-(EDIT: seems to be an issue with the syslink. you'll have to make one manually. this is the database you'll have to syslink to "Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
 
 #### for NAS and other OS:
 I really have no clue. if you setup the config file and the database link manually then the
