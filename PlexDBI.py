@@ -522,7 +522,7 @@ class PlexDBI:
         f = open(config_file_name, "w+")
 
         if self.operative_system == 'linux':
-            os.system("sudo chown --reference=" + os.getcwd() + "/PlexDBI.py " + config_file_name)
+            os.system("sudo chown --reference=" + os.path.dirname(os.path.realpath(__file__)) + "/PlexDBI.py " + config_file_name)
 
         f.write('')
         f.write('\n[REQUIRED]')
