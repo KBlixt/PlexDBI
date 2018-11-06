@@ -616,8 +616,9 @@ else:
     has_root_access = False
 
 db_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'PlexDatabase.db')
+cfg_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config')
 try:
-    modify_plex_server_1 = PlexDBI(op_system, has_root_access, db_dir, 'config')
+    modify_plex_server_1 = PlexDBI(op_system, has_root_access, db_dir, cfg_dir)
 except ValueError as e:
     print(e)
 end = time.time()
