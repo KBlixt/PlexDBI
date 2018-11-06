@@ -35,9 +35,9 @@ you'll still have to configure the config file but just run the script and it wi
     sudo python3 PlexDBI.py
 ```
 Then it's up to you if you wish to add it to a crontab schedule, personally i've got it scheduled once a day at 10:30
-with sudo privileges.
+in the root crontab.
 ```sh
-    30 10 * * * cd /opt/PlexDBI/  && sudo /usr/bin/python3 /opt/PlexDBI/PlexDBI.py
+    30 10 * * * cd /opt/PlexDBI/  && /usr/bin/python3 /opt/PlexDBI/PlexDBI.py
 ```
 If you don't want to give it sudo privileges then you'll have make a symlink for the database. i.e:
 ```sh
