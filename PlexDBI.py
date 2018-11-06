@@ -506,15 +506,15 @@ class PlexDBI:
             if self.root_access:
                 os.system('ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/'
                           'Plug-in Support/Databases/com.plexapp.plugins.library.db" '
-                          '"' + os.path.join(os.path.dirname(os.path.realpath(__file__)), database_file) + '"')
+                          '"' + database_file + '"')
         elif op_system == 'windows':
             os.system('mklink '
-                      '"' + os.path.join(os.path.dirname(os.path.realpath(__file__)), database_file) + '" '
+                      '"' + database_file + '" '
                       '%LOCALAPPDATA%\Plex Media Server\Plug-in Support\Databases\com.plexapp.plugins.library.db')
         elif op_system == 'mac_os':
             os.system('ln -s ~/Library/Application Support/Plex Media Server/Plug-in Support/Databases/'
                       'com.plexapp.plugins.library.db '
-                      '"' + os.path.join(os.path.dirname(os.path.realpath(__file__)), database_file) + '"')
+                      '"' + database_file + '"')
         else:
             pass
 
@@ -615,9 +615,9 @@ elif op_system == 'windows' or op_system == 'mac_os':
 else:
     has_root_access = False
 
-
+db_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'PlexDatabase.db')
 try:
-    modify_plex_server_1 = PlexDBI(op_system, has_root_access, 'PlexDatabase.db', 'config')
+    modify_plex_server_1 = PlexDBI(op_system, has_root_access, db_dir, 'config')
 except ValueError as e:
     print(e)
 end = time.time()
