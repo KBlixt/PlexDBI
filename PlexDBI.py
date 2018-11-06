@@ -10,6 +10,7 @@ try:
     import inspect
     import time
     import os
+    from shutil import copyfile
     from collections import OrderedDict
     from sys import platform as _platform
 except ImportError:
@@ -504,15 +505,16 @@ class PlexDBI:
         if op_system == 'linux':
             if self.root_access:
                 os.system('ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/'
-                          'Plug-in Support/Databases/com.plexapp.plugins.library.db" "'
-                          + os.getcwd() + '/' + database_file + '"')
+                          'Plug-in Support/Databases/com.plexapp.plugins.library.db" '
+                          '"' + os.path.join(os.path.dirname(os.path.realpath(__file__)), database_file) + '"')
         elif op_system == 'windows':
-            os.system('mklink %LOCALAPPDATA%\Plex Media Server\Plug-in Support\Databases\com.plexapp.plugins.library.db'
-                      ' "' + os.getcwd() + '/' + database_file + '"')
+            os.system('mklink '
+                      '"' + os.path.join(os.path.dirname(os.path.realpath(__file__)), database_file) + '" '
+                      '%LOCALAPPDATA%\Plex Media Server\Plug-in Support\Databases\com.plexapp.plugins.library.db')
         elif op_system == 'mac_os':
             os.system('ln -s ~/Library/Application Support/Plex Media Server/Plug-in Support/Databases/'
-                      'com.plexapp.plugins.library.db'
-                      ' "' + os.getcwd() + '/' + database_file + '"')
+                      'com.plexapp.plugins.library.db '
+                      '"' + os.path.join(os.path.dirname(os.path.realpath(__file__)), database_file) + '"')
         else:
             pass
 
@@ -575,6 +577,7 @@ class PlexDBI:
 
     @staticmethod
     def backup_database():
+
         if op_system == 'linux':
             os.system('cp PlexDatabase.db PlexDatabase.backup.db')
         elif op_system == 'mac_os':
