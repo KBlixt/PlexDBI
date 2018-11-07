@@ -31,8 +31,10 @@ class PlexMoviesDBI:
         self.config.read(config_file)
         try:
             self.library_section = self.config.get('REQUIRED', 'MOVIE_LIBRARY_SECTION')
+            self.library_section_tv = self.config.get('REQUIRED', 'TV_SHOW_LIBRARY_SECTION')
             self.tmdb_api_key = self.config.get('OPTIONAL', 'TMDB_API_KEY')
-            self.SET_REST_TO_RELEASE = self.config['OPTIONAL'].getboolean('SET_REST_TO_RELEASE', False)
+
+            self.SET_REST_TO_RELEASE = self.config['MOVIES_SETTINGS'].getboolean('SET_REST_TO_RELEASE', False)
 
             self.recent_releases_minimum_count = self.config.getint('RECENT_RELEASES', 'MIN_COUNT')
             self.recent_releases_maximum_count = self.config.getint('RECENT_RELEASES', 'MAX_COUNT')
@@ -49,6 +51,9 @@ class PlexMoviesDBI:
 
             self.random_count = self.config.getint('RANDOM', 'COUNT')
             self.random_order = self.config.getint('RANDOM', 'ORDER')
+
+            self.tv_shows = self.config['TV_SHOWS_SETTINGS'].getboolean('ENABLED', False)
+
             if self.recent_releases_minimum_count < 0:
                 self.recent_releases_minimum_count = 0
             if self.recent_releases_minimum_count > self.recent_releases_maximum_count:
@@ -75,9 +80,12 @@ class PlexMoviesDBI:
             print('you can fill in the empty one and rename it to "config".')
             print('---------------------------------------------------------------------------')
             raise
-
-        if not self.check_library_section(self.library_section):
-            raise ValueError
+        self.good_movie_library = False
+        self.good_tv_library = False
+        if self.check_library_section(self.library_section):
+            self.good_movie_library = True
+        if self.check_tv_library_section(self.library_section_tv):
+            self.good_tv_library = True
 
         self.order_power = max(self.recent_releases_maximum_count,
                                self.random_count,
@@ -105,26 +113,30 @@ class PlexMoviesDBI:
         self.random_order = order_list['random_order']
 
     def find_movies(self):
-        self.recent_releases(self.recent_releases_minimum_count,
-                             self.recent_releases_maximum_count,
-                             self.recent_releases_order,
-                             self.recent_releases_day_limit)
+        if self.good_movie_library:
+            self.recent_releases(self.recent_releases_minimum_count,
+                                 self.recent_releases_maximum_count,
+                                 self.recent_releases_order,
+                                 self.recent_releases_day_limit)
 
-        self.old_but_gold(self.old_but_gold_count,
-                          self.old_but_gold_order,
-                          self.old_but_gold_year_limit,
-                          self.old_but_gold_min_critic_score)
+            self.old_but_gold(self.old_but_gold_count,
+                              self.old_but_gold_order,
+                              self.old_but_gold_year_limit,
+                              self.old_but_gold_min_critic_score)
 
-        if len(self.tmdb_api_key) > 5:
-            self.hidden_gem(self.hidden_gem_count,
-                            self.hidden_gem_order)
-        else:
-            print("INFO: You have not specified a tmdb api key.")
+            if len(self.tmdb_api_key) > 5:
+                self.hidden_gem(self.hidden_gem_count,
+                                self.hidden_gem_order)
+            else:
+                print("INFO: You have not specified a tmdb api key.")
 
-        self.random(self.random_count,
-                    self.random_order)
-        if self.SET_REST_TO_RELEASE:
-            self.set_rest_to_release()
+            self.random(self.random_count,
+                        self.random_order)
+            if self.SET_REST_TO_RELEASE:
+                self.set_rest_to_release()
+        if self.tv_shows:
+            if self.good_tv_library:
+                self.set_rest_to_release_tv()
         return self.local_movie_list
 
     def check_library_section(self, library_section):
@@ -166,6 +178,49 @@ class PlexMoviesDBI:
 
             print('-----------------------------------------------------------------------------------------')
             print('Please use one of these ID\'s as your MOVIE_LIBRARY_SECTION parameter in the config file.')
+
+            return False
+        return True
+
+    def check_tv_library_section(self, library_section):
+        self.cursor.execute("SELECT language,section_type "
+                            "FROM library_sections "
+                            "WHERE id = ?", (library_section,))
+
+        info = self.cursor.fetchone()
+
+        try:
+
+            if info[0] == 'xn' or info[1] != 2:
+                print('Your TV_SHOW_LIBRARY_SECTION parameter in the config file is not a Tv show library.')
+                print('These libraries are tv show libraries and can be used in this script:')
+                print('-----------------------------------------------------------------------------------------')
+
+                for library in self.cursor.execute("SELECT id, name "
+                                                   "FROM library_sections "
+                                                   "WHERE language IS NOT 'xn' "
+                                                   "AND section_type = 2 "
+                                                   "ORDER BY id ASC "):
+                    print('The library "' + library[1] + '" have section_id: ' + str(library[0]) + '.')
+
+                print('-----------------------------------------------------------------------------------------')
+                print('Please use one of these ID\'s as your TV_SHOW_LIBRARY_SECTION parameter in the config file.')
+
+                return False
+        except TypeError:
+            print('Your TV_SHOW_LIBRARY_SECTION parameter in the config file is not a Tv show library.')
+            print('These libraries are tv show libraries and can be used in this script:')
+            print('-----------------------------------------------------------------------------------------')
+
+            for library in self.cursor.execute("SELECT id, name "
+                                               "FROM library_sections "
+                                               "WHERE language IS NOT 'xn' "
+                                               "AND section_type = 2 "
+                                               "ORDER BY id ASC "):
+                print('The library "' + library[1] + '" have section_id: ' + str(library[0]) + '.')
+
+            print('-----------------------------------------------------------------------------------------')
+            print('Please use one of these ID\'s as your TV_SHOW_LIBRARY_SECTION parameter in the config file.')
 
             return False
         return True
@@ -419,6 +474,34 @@ class PlexMoviesDBI:
             if movie_id not in self.local_movie_list and row[2] != row[3]:
                 if 8 < len(row[2]) < 22:
                     self.local_movie_list[movie_id] = row[2]
+
+    def set_rest_to_release_tv(self):
+        self.movies_provided = 0
+
+        for row in self.cursor.execute("SELECT id,title,originally_available_at,added_at "  # Random
+                                       "FROM metadata_items "
+                                       "WHERE library_section_id = ? "
+                                       "AND metadata_type = 4 ", self.library_section_tv):
+
+            movie_id = row[0]
+            title = str(row[1])
+
+            if title == 'None':
+                print("----Script failed----")
+                print("No title were found for a movie and it was skipped.")
+                print("Not a critical error and can be ignored unless it's a common occurrence.")
+                print("movie_id: " + movie_id)
+                continue
+            if movie_id == 'None':
+                print("----Script failed----")
+                print("No id were found for the movie \"" + title + "\" and it was skipped.")
+                print("Not a critical error and can be ignored unless it's a common occurrence.")
+                continue
+
+            if movie_id not in self.local_movie_list and row[2] != row[3]:
+                if isinstance(row[2], str):
+                    if 8 < len(row[2]) < 22:
+                        self.local_movie_list[movie_id] = row[2]
 
     def add_to_queue(self, movie_id, order, title):
         self.local_movie_list[movie_id] = self.movies_provided + order * self.order_power

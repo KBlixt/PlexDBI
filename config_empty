@@ -1,6 +1,7 @@
 
 [REQUIRED]
     MOVIE_LIBRARY_SECTION = 0
+    TV_SHOW_LIBRARY_SECTION = 0
 
 [OPTIONAL]
     # leave blank if you don't have a key.
@@ -9,12 +10,13 @@
     # Do you want to make a copy of your database before modifying it? (yes/no)')
     BACKUP = yes
 
+[MOVIES_SETTINGS]
+
     # if you set the [SET_TO_RELEASE] to true then any other movie not modified by this script will
     # get it's added date set to its release date.
     # Use this with every category [COUNT] set to 0 to change all movies to their release date.
     SET_REST_TO_RELEASE = false
 
-[MOVIES_SETTINGS]
     # Here you can control the settings for each individual category
     # the "COUNT" parameter specifies how manny movies from each category will be modified
     # and the "ORDER" specifies in what order the categories will appear.
@@ -46,3 +48,6 @@
     [RANDOM]
         COUNT = 1
         ORDER = 4
+
+[TV_SHOWS_SETTINGS]
+    ENABLED = true
