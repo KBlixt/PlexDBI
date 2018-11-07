@@ -468,7 +468,7 @@ class PlexDBI:
                     os.system("sudo service plexmediaserver stop")
             elif op_system == 'windows':
                 print('--Stopping plexmediaserver.')
-                os.system('taskkill /F /IM "Plex Media Server.exe" /T')
+                os.system('taskkill /IM "Plex Media Server.exe" /T')
             elif op_system == 'mac_os':
                 os.system('killall "Plex Media Server"')
 
@@ -496,8 +496,8 @@ class PlexDBI:
                     print('You can now proceed to restart your Plex server.')
         elif op_system == 'windows':
             print('--Starting plexmediaserver.')
-            os.system('start /B "C:\Program Files\Plex Media Server\Plex Media Server.exe"')
-            os.system('start /B "C:\Program Files (x86)\Plex Media Server\Plex Media Server.exe"')
+            os.startfile("C:\Program Files (x86)\Plex\Plex Media Server\Plex Media Server.exe")
+            os.startfile("C:\Program Files\Plex\Plex Media Server\Plex Media Server.exe")
             print("")
         elif op_system == 'mac_os':
             print('--Starting plexmediaserver.')
