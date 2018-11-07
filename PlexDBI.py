@@ -582,9 +582,11 @@ class PlexDBI:
             print('--Starting plexmediaserver.')
             try:
                 os.startfile("C:\Program Files (x86)\Plex\Plex Media Server\Plex Media Server.exe")
-                os.startfile("C:\Program Files\Plex\Plex Media Server\Plex Media Server.exe")
             except FileNotFoundError:
-                print('failed to restart plex server, please restart it manually.')
+                try:
+                    os.startfile("C:\Program Files\Plex\Plex Media Server\Plex Media Server.exe")
+                except FileNotFoundError:
+                    print('failed to restart plex server, please restart it manually.')
             print("")
         elif op_system == 'mac_os':
             print('--Starting plexmediaserver.')
