@@ -50,4 +50,4 @@
         ORDER = 4
 
 [TV_SHOWS_SETTINGS]
-    ENABLED = true
+    ENABLED = false
