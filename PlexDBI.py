@@ -10,6 +10,7 @@ try:
     import inspect
     import time
     import os
+    from shutil import copyfile
     from collections import OrderedDict
     from sys import platform as _platform
 except ImportError:
@@ -427,6 +428,7 @@ class PlexMoviesDBI:
 
 class PlexDBI:
     def __init__(self, operative_system, root_access, database_file, config_file):
+        self.database_file = database_file
         self.os = operative_system
         self.root_access = root_access
         self.operative_system = operative_system
@@ -446,8 +448,6 @@ class PlexDBI:
             mod_queue = movies.find_movies()
             if len(mod_queue) > 0:
                 self.commit(mod_queue)
-                if self.config.getboolean('OPTIONAL', 'BACKUP'):
-                    self.backup_database()
             else:
                 print('Nothing to change. exiting.')
         except ValueError:
@@ -456,6 +456,11 @@ class PlexDBI:
         self.database.close()
 
     def commit(self, mod_queue):
+        if self.config.getboolean('OPTIONAL', 'BACKUP'):
+            try:
+                copyfile(self.database_file, os.path.join(os.path.dirname(os.path.realpath(__file__)), 'plex.bak.db'))
+            except PermissionError:
+                print('failed to create backup: permission denied.')
         if self.config.get('OPTIONAL', 'BACKUP').lower() == 'yes':
             if op_system == 'linux':
                 if self.root_access:
@@ -463,7 +468,7 @@ class PlexDBI:
                     os.system("sudo service plexmediaserver stop")
             elif op_system == 'windows':
                 print('--Stopping plexmediaserver.')
-                os.system('taskkill /F /IM "Plex Media Server.exe" /T')
+                os.system('taskkill /IM "Plex Media Server.exe" /T')
             elif op_system == 'mac_os':
                 os.system('killall "Plex Media Server"')
 
@@ -491,8 +496,8 @@ class PlexDBI:
                     print('You can now proceed to restart your Plex server.')
         elif op_system == 'windows':
             print('--Starting plexmediaserver.')
-            os.system('start /B "C:\Program Files\Plex Media Server\Plex Media Server.exe"')
-            os.system('start /B "C:\Program Files (x86)\Plex Media Server\Plex Media Server.exe"')
+            os.startfile("C:\Program Files (x86)\Plex\Plex Media Server\Plex Media Server.exe")
+            os.startfile("C:\Program Files\Plex\Plex Media Server\Plex Media Server.exe")
             print("")
         elif op_system == 'mac_os':
             print('--Starting plexmediaserver.')
@@ -504,15 +509,16 @@ class PlexDBI:
         if op_system == 'linux':
             if self.root_access:
                 os.system('ln -s "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/'
-                          'Plug-in Support/Databases/com.plexapp.plugins.library.db" "'
-                          + os.getcwd() + '/' + database_file + '"')
+                          'Plug-in Support/Databases/com.plexapp.plugins.library.db" '
+                          '"' + database_file + '"')
         elif op_system == 'windows':
-            os.system('mklink %LOCALAPPDATA%\Plex Media Server\Plug-in Support\Databases\com.plexapp.plugins.library.db'
-                      ' "' + os.getcwd() + '/' + database_file + '"')
+            os.system('mklink '
+                      '"' + database_file + '" '
+                      '%LOCALAPPDATA%\Plex Media Server\Plug-in Support\Databases\com.plexapp.plugins.library.db')
         elif op_system == 'mac_os':
             os.system('ln -s ~/Library/Application Support/Plex Media Server/Plug-in Support/Databases/'
-                      'com.plexapp.plugins.library.db'
-                      ' "' + os.getcwd() + '/' + database_file + '"')
+                      'com.plexapp.plugins.library.db '
+                      '"' + database_file + '"')
         else:
             pass
 
@@ -520,7 +526,7 @@ class PlexDBI:
         f = open(config_file_name, "w+")
 
         if self.operative_system == 'linux':
-            os.system("sudo chown --reference=" + os.getcwd() + "/PlexDBI.py " + config_file_name)
+            os.system("sudo chown --reference=" + os.path.dirname(os.path.realpath(__file__)) + "/PlexDBI.py " + config_file_name)
 
         f.write('')
         f.write('\n[REQUIRED]')
@@ -573,18 +579,8 @@ class PlexDBI:
         f.write('\n')
         f.close()
 
-    @staticmethod
-    def backup_database():
-        if op_system == 'linux':
-            os.system('cp PlexDatabase.db PlexDatabase.backup.db')
-        elif op_system == 'mac_os':
-            os.system('cp PlexDatabase.db PlexDatabase.backup.db')
-        elif op_system == 'windows':
-            os.system('copy PlexDatabase.db PlexDatabase.backup.db')
-
 
 start = time.time()
-
 
 if _platform == "linux" or _platform == "linux2":
     op_system = 'linux'
@@ -612,9 +608,10 @@ elif op_system == 'windows' or op_system == 'mac_os':
 else:
     has_root_access = False
 
-
+db_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'PlexDatabase.db')
+cfg_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config')
 try:
-    modify_plex_server_1 = PlexDBI(op_system, has_root_access, 'PlexDatabase.db', 'config')
+    modify_plex_server_1 = PlexDBI(op_system, has_root_access, db_dir, cfg_dir)
 except ValueError as e:
     print(e)
 end = time.time()
