@@ -1,6 +1,8 @@
-# PlexDBI
 
-# SCRIPT IS CURRENTLY BROKEN. RUNNING SCRIPT RESULT IN PLEX SHUTDOWN. 
+# SCRIPT IS CURRENTLY BROKEN AND OBSOLETE.
+
+
+# PlexDBI
 
 This Python3 script is intended to manipulate Plex's homescreen table "Recently added movies" it can also use the tmdb-api
 if the user have an api key. Otherwise that'll be ignored.
